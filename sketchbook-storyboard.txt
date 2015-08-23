@@ -1,0 +1,63 @@
+#town (fountain in the middle -> water)
+
+#enchanted forest, drunken elves. (waterbag)
+
+cave (stumble and fall)
+
+[south, east2x, north2x]
+desert (water + waterbag = full waterbag)
+-x heat fata morgana
+-x nights are cold. dream/nightmare
+-waterbag empty. need to find the end soon.
+-x oasis. Refill the waterbag. rest a day
+-find armor on a dead horse
+
+[south]
+tundra (you have walked a long time.)
+
+[south]
+forest with man hanging from rope (rope)
+
+[south]
+river (raft -> rope and driftwood)
+	
+	[east]
+	river in a mountain no way around
+
+	[west]
+	ocean (driftwood)
+
+[all go south]
+mountain (snow starts to drift down, slowly turning landscape in to snow. can't cross it. you feel the end of your journey approaching)
+
+	[east]
+	mountain pass (guarded by griphons) you trust in your claws but without your armor your no match for 3 of these animals. as they are used to hunt in packs.
+
+		[east]
+		?village of humans, racists, flea west
+
+	[west]
+	canyon (No way forward. You think you spot a piramid down below)
+
+		[north]
+		smithy, rains heavily (anvil, use it to make armor fit you.)
+
+		[south]
+		..?
+
+from mountain pass 
+
+[south]
+dragon den 	(you find yourself reunited with your hatchling dragons! !)
+further south the empire, but you will wait a bit before making your entrance before the dragon king. You talk to your wife. The elves and human village were not a problem as you expected. Not much trouble otherwise.
+
+
+to do:
+-dragon tallons iets anders van maken. Ook bij de smithy laten maken tot dragon talons. Beide nodig om de griffons te bevechten. 1 van de 2 en je verliest.
+-add extra items
+-add drop item
+-pretify the text. met \n met name van lange stukken.
+-actions? een hash van maken met verklarende text wat de acties doen.
+
+-optional: implementeer een weight systeem voor je sack met gewichten per item als extra attribute.
+
