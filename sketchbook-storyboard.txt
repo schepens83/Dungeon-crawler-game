@@ -51,13 +51,3 @@ from mountain pass
 dragon den 	(you find yourself reunited with your hatchling dragons! !)
 further south the empire, but you will wait a bit before making your entrance before the dragon king. You talk to your wife. The elves and human village were not a problem as you expected. Not much trouble otherwise.
 
-
-to do:
--dragon tallons iets anders van maken. Ook bij de smithy laten maken tot dragon talons. Beide nodig om de griffons te bevechten. 1 van de 2 en je verliest.
--add extra items
--add drop item
--pretify the text. met \n met name van lange stukken.
--actions? een hash van maken met verklarende text wat de acties doen.
-
--optional: implementeer een weight systeem voor je sack met gewichten per item als extra attribute.
-

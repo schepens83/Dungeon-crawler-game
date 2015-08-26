@@ -1,0 +1,4 @@
+to do:
+-implementeer a weight system for your sack. With weights per item as extra attribute.
+	-also add drop item, then so that you can manage
+-actions? make into a hash with explanatory text of what the actions do.
