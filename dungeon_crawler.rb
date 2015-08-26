@@ -1,10 +1,10 @@
 class Dungeon
-	attr_accessor :player, :player_item
+	attr_accessor :player
 
 	def initialize(player_name)
-		@player = Player.new(player_name)
-		@rooms = []
-		@player_item = []
+		@player = Player.new(player_name, self)
+		@player.items = []
+		@rooms = []		
 	end
 	def start(location)
 		@player.location = location
@@ -155,146 +155,180 @@ class Dungeon
 	def add_room(reference, name, description, connections, items)
 		@rooms << Room.new(reference, name, description, connections, items)
 	end
-	def go(direction)
-		if find_room_in_dungeon(@player.location).is_adjoining_rooms?(direction) #only change location if the new direction is valid.
-			#set unlocked status of some areas when they are visited.
-			if find_room_in_dungeon(@player.location).reference == :small_town then find_room_in_dungeon(@player.location).unlocked = true end
-			if find_room_in_dungeon(@player.location).reference == :enchanted_forest then find_room_in_dungeon(@player.location).unlocked = true end
-			if find_room_in_dungeon(@player.location).reference == :south_east_desert then find_room_in_dungeon(@player.location).unlocked = true end
+	def unlock_room()
+		find_room_in_dungeon(@player.location).unlocked = true
+	end
+end
 
-			#change current location to the new direction. 
+class Player
+	attr_accessor :name, :location, :items, :dungeon
+
+	def initialize(player_name, dungeon)
+		@name = player_name
+		@items = []
+		@dungeon = dungeon
+	end
+	def directions
+		puts "\nFrom here you can go: \n"
+		@dungeon.find_room_in_dungeon(location).connections.keys.each {|i| puts i.to_s + "\n"}
+	end
+	def go(direction)
+		if @dungeon.find_room_in_dungeon(@location).is_adjoining_rooms?(direction) #only change @location if the new direction is valid.
+			#set unlocked status of some areas when they are visited.
+			if @dungeon.find_room_in_dungeon(@location).reference == :small_town then @dungeon.find_room_in_dungeon(@location).unlocked = true end
+			if @dungeon.find_room_in_dungeon(@location).reference == :enchanted_forest then @dungeon.find_room_in_dungeon(@location).unlocked = true end
+			if @dungeon.find_room_in_dungeon(@location).reference == :south_east_desert then @dungeon.find_room_in_dungeon(@location).unlocked = true end
+
+			#change current @location to the new direction. 
 			puts "\nYou go " + direction.to_s
-			@player.location = find_room_in_dungeon(@player.location).connections[direction]
-			show_current_description
+			@location = @dungeon.find_room_in_dungeon(@location).connections[direction]
+			@dungeon.show_current_description
 		else
 			puts "\nIt does not appear to be possible to move there. Choose another direction."
 		end
-	end	
+	end
+	def take(item_name)
+		if !@dungeon.find_room_in_dungeon(@location).items.select {|i| i.name == item_name}.empty? #Player can only take items in the room. 
+			@items = @items + @dungeon.find_room_in_dungeon(@location).items.select {|i| i.name == item_name}
+			@dungeon.find_room_in_dungeon(@location).items.delete_if {|i| i.name == item_name}
+			puts "You put the " + item_name + " in you sack."
+		else
+			puts "That item is not in this room."
+		end
+	end
+	def inspect_item(item_name)
+		all_items = @items + @dungeon.find_room_in_dungeon(@location).items
+		if !all_items.select {|i| i.name == item_name}.empty?
+			puts all_items.select {|i| i.name == item_name}.first.description
+		else
+			puts "You can't find that item nor have it in your backpack."
+		end
+	end
 	def use(item_name)
-		if !@player_item.select {|i| i.name == item_name}.empty? #Player can only use items he has with him. 
+		if !items.select {|i| i.name == item_name}.empty? #Player can only use items he has with him. 
 			case item_name
 			when "crocodile-teeth"
 				puts "\nYou look at it and try to to think of a use for it in your current situation. The task is beyond you. You put it back."
 			when "eagle-egg"
 				puts "\nYou quickly eat your last egg. It fills your stomach and leaves you drowsy but fulfilled."
-				@player_item.delete_if {|i| i.name == "Eagle-egg"}
+				items.delete_if {|i| i.name == "Eagle-egg"}
 			when "feather"
 				puts "\nYou scratch yourself beneath your feet with the pointy side and enjoy a momentary relief of an incessant itch."
 			when "drinking-bag"
-				if find_room_in_dungeon(@player.location).reference == :small_town
-					@player_item.delete_if {|i| i.name == "drinking-bag"}
-					@player_item << Item.new("full-waterbag", "\nfilled to the brim with sparkling cold water. Sure to quench your thirst in times of need. Heavy to carry for any grown man, you find some sense in being able to carry it without much difficulty.")
+				if @dungeon.find_room_in_dungeon(@location).reference == :small_town
+					items.delete_if {|i| i.name == "drinking-bag"}
+					items << Item.new("full-waterbag", "\nfilled to the brim with sparkling cold water. Sure to quench your thirst in times of need. Heavy to carry for any grown man, you find some sense in being able to carry it without much difficulty.")
 					puts "\nYou fill the drinking-bag with water. Sure to rince it of the liquor by filling and empty-ing it a couple of times."					
 				else
 					puts "\nYou look around and wonder what you can do with it. Nothing comes to mind. You put it away again."
 				end
 			when "key"
-				if find_room_in_dungeon(@player.location).reference == :small_town
-					find_room_in_dungeon(@player.location).items = [Item.new("torch", "\nA long stick with some cloth at the end.\nOn closer inspection, it seems to be damp with some oil.")]
-					find_room_in_dungeon(@player.location).items.flatten
-					@player_item.delete_if {|i| i.name == "key"}
+				if @dungeon.find_room_in_dungeon(@location).reference == :small_town
+					@dungeon.find_room_in_dungeon(@location).items = [Item.new("torch", "\nA long stick with some cloth at the end.\nOn closer inspection, it seems to be damp with some oil.")]
+					@dungeon.find_room_in_dungeon(@location).items.flatten
+					items.delete_if {|i| i.name == "key"}
 					s = ""
 					s += "\nYou open the door to the mansion and find inside:\n"
-					find_room_in_dungeon(@player.location).items.each { |i| s += i.name + ", " }
+					@dungeon.find_room_in_dungeon(@location).items.each { |i| s += i.name + ", " }
 					puts s
 				else
 					puts "\nYou really don't know what to do with that here."
 				end
 			when "torch"
-				if find_room_in_dungeon(@player.location).reference == :canyon
+				if @dungeon.find_room_in_dungeon(@location).reference == :canyon
 					puts "\nYou place the torch under the magnifying glass and wait for the sun to do it's work. After a while you'r rewarded with a bit of smoke and after waiting some more the torch catches fire. You'r now in possesion of a lighted torch."
-					t = @player_item.select {|i| i.name == "torch"}
+					t = items.select {|i| i.name == "torch"}
 					t[0].name = "lighted-torch"
 					t[0].description = "\nYour torch burns slowly and casts an eary light. The darkness seems much less scary now."
 				else
 					puts "\nYou hold the torch in your hands and wait for something to happen. Allthough nobody is watching you, after a while you feel slightly idiotic. With a small sense of shame you put it away."
 				end
 			when "lighted-torch"
-				if find_room_in_dungeon(@player.location).reference == :entrance_cave
-					unlock_room
-					find_room_in_dungeon(@player.location).add_connection([:east, :cave_tunnel])
+				if @dungeon.find_room_in_dungeon(@location).reference == :entrance_cave
+					@dungeon.unlock_room
+					@dungeon.find_room_in_dungeon(@location).add_connection([:east, :cave_tunnel])
 					puts "\nAs you hold up your torch you light up the cave. You feel emboldened enough to enter the cave now."
 				else
 					puts "\nYou burn yourself with the torch. Cursing, you put it away. It was no good here anyway."					
 				end
 			when "full-waterbag"
-				if find_room_in_dungeon(@player.location).reference == :start_desert
-					unlock_room
-					find_room_in_dungeon(@player.location).add_connection([:south, :south_desert])
-					find_room_in_dungeon(@player.location).add_connection([:east, :east_desert])
-					find_room_in_dungeon(@player.location).add_connection([:north, :north_desert])
+				if @dungeon.find_room_in_dungeon(@location).reference == :start_desert
+					@dungeon.unlock_room
+					@dungeon.find_room_in_dungeon(@location).add_connection([:south, :south_desert])
+					@dungeon.find_room_in_dungeon(@location).add_connection([:east, :east_desert])
+					@dungeon.find_room_in_dungeon(@location).add_connection([:north, :north_desert])
 					puts "\nFeeling the heavy weight of the water-bag on your back, you feel assured of your ability to survive in the desert. You only need to choose which direction to set out for."
 				else
 					puts "\nYou spill some water by accident. Not really of any consequence, but somehow it makes you feel small again. Your parents had no patience for clumsiness."					
 				end
 			when "driftwood"
-				if find_room_in_dungeon(@player.location).reference == :riverland
+				if @dungeon.find_room_in_dungeon(@location).reference == :riverland
 					puts "What item do you want to combine this with?"
-					if gets.chomp.split(' ').any? {|i| i == "rope"} and !@player_item.select {|i| i.name == "rope"}.empty?
-						find_room_in_dungeon(@player.location).add_connection([:south, :farmland])
-						find_room_in_dungeon(@player.location).unlocked = true
-						@player_item.delete_if {|i| i.name == "driftwood"}
-						@player_item.delete_if {|i| i.name == "rope"}
+					if gets.chomp.split(' ').any? {|i| i == "rope"} and !items.select {|i| i.name == "rope"}.empty?
+						@dungeon.find_room_in_dungeon(@location).add_connection([:south, :farmland])
+						@dungeon.find_room_in_dungeon(@location).unlocked = true
+						items.delete_if {|i| i.name == "driftwood"}
+						items.delete_if {|i| i.name == "rope"}
 						puts "\nTying off the last knot you look satisfied at your creation. The huge raft will be big enough to support your considerable girth. Confident of it's quality you push it on the river."
 					else
 						puts "\nYou don't know how to combine those."
 					end
 				else
-					if find_room_in_dungeon(@player.location).reference == :ocean
+					if @dungeon.find_room_in_dungeon(@location).reference == :ocean
 					 	puts "\nThe river has turned in to a mongrove here. Not a good place to cross."
 					else
 						puts "\nYou stare at it for a while and wait for the quarter to drop. \nIt's not happening. Better think of something else then."
 					end
 				end
 			when "rope"
-				if find_room_in_dungeon(@player.location).reference == :riverland
+				if @dungeon.find_room_in_dungeon(@location).reference == :riverland
 					puts "What item do you want to combine this with?"
 					player_answer = gets.chomp.to_s
-					if player_answer.split(' ').any? {|i| i == "driftwood"} and !@player_item.select {|i| i.name == "driftwood"}.empty?
-						find_room_in_dungeon(@player.location).add_connection([:south, :farmland])
-						find_room_in_dungeon(@player.location).unlocked = true
-						@player_item.delete_if {|i| i.name == "driftwood"}
-						@player_item.delete_if {|i| i.name == "rope"}
+					if player_answer.split(' ').any? {|i| i == "driftwood"} and !items.select {|i| i.name == "driftwood"}.empty?
+						@dungeon.find_room_in_dungeon(@location).add_connection([:south, :farmland])
+						@dungeon.find_room_in_dungeon(@location).unlocked = true
+						items.delete_if {|i| i.name == "driftwood"}
+						items.delete_if {|i| i.name == "rope"}
 						puts "\nTying off the last knot, you look satisfied at your creation. The huge raft will be big enough to support your considerable girth. Confident of it's quality you push it on the river."
 					else
 						puts "\nYou don't know how to combine those."
 					end
 				else
-					if find_room_in_dungeon(@player.location).reference == :ocean
+					if @dungeon.find_room_in_dungeon(@location).reference == :ocean
 					 	puts "\nThe river has turned in to a mongrove here. Not a good place to cross."
 					else
 						puts "\nYou stare at it for a while and wait for the quarter to drop. \nIt's not happening. Better think of something else then."
 					end
 				end
 			when "blunt-blades" 
-				if find_room_in_dungeon(@player.location).reference == :smithy
+				if @dungeon.find_room_in_dungeon(@location).reference == :smithy
 					puts "\nWith your instructions the smith starts to work on your blades. A young apprentice works up the fire, as the smith lays the blades in the red coals. After a couple of hours of work, he comes back with a set of huge-talons. You inspect them with an eye for detail. After a while you sniff your satisfaction. These will do."
-					t = @player_item.select {|i| i.name == "blunt-blades"}
+					t = items.select {|i| i.name == "blunt-blades"}
 					t[0].name = "huge-talons"
 					t[0].description = "\nAs you try to fit these on, you think they will do. \nAlthough the smith was unfamiliar with its design, he did a good enough job with it. "
 				else
 					puts "No use for those here. In their current form they are useless."
 				end
 			when "horse-armor"
-				if find_room_in_dungeon(@player.location).reference == :smithy
+				if @dungeon.find_room_in_dungeon(@location).reference == :smithy
 					puts "\nThe smith seems interested in this job. After firing of half a dozen questions he sets out to work. It will be a while he warns. You settle in in front of his shop. As the smith works, his childrens curiosity slowly overcomes their fear, and one by one they start to come outside. You love children of any size, so you indulge them in their youthfull play. When the smith returns with his work it's approaching noon. While he sends his children back in for lunch, you look at his work. You're impressed and promise him you will recommend his work to the emperors mastersmith when you get home. He seems pleased with himself."
-					t = @player_item.select {|i| i.name == "horse-armor"}
+					t = items.select {|i| i.name == "horse-armor"}
 					t[0].name = "draconian-armor"
 					t[0].description = "\nThe smith did an excellent job on this! The armor shines as new and fits like a glove. Some extra metal was needed, but the joints hardly show."
 				else
 					puts "\nNo use for that here. In it's current form it's useless."
 				end
 			when "draconian-armor" 
-				if find_room_in_dungeon(@player.location).reference == :start_mountain_pass
+				if @dungeon.find_room_in_dungeon(@location).reference == :start_mountain_pass
 					puts "\nYou slowly and serenely put on the draconian-armor."
-					@player_item.select {|i| i.name == "draconian-armor"}[0].used = true 
-					if !@player_item.select {|i| i.name == "huge-talons"}.empty? #make sure player has item. before testing if its been used.
-						if@player_item.select {|i| i.name == "huge-talons"}[0].used == true 
+					items.select {|i| i.name == "draconian-armor"}[0].used = true 
+					if !items.select {|i| i.name == "huge-talons"}.empty? #make sure player has item. before testing if its been used.
+						if items.select {|i| i.name == "huge-talons"}[0].used == true 
 							puts "\nCombined with your talons, you are fit for combat. You're prepared to cross the pass now." #if player has item and it is used.
-							find_room_in_dungeon(@player.location).add_connection([:south, :mountain_pass])
-							@player_item.delete_if {|i| i.name == "huge-talons"}
-							@player_item.delete_if {|i| i.name == "draconian-armor"}
-							unlock_room
+							@dungeon.find_room_in_dungeon(@location).add_connection([:south, :mountain_pass])
+							items.delete_if {|i| i.name == "huge-talons"}
+							items.delete_if {|i| i.name == "draconian-armor"}
+							@dungeon.unlock_room
 						else
 							puts "You feel much more secure now, but doubt it will be enough against the griphons." #if player has item but has not been used.
 						end
@@ -303,16 +337,16 @@ class Dungeon
 					puts "\nYou put it on and look bad-ass. You imagine. No use other than that however. You put it back in your sack."
 				end
 			when "huge-talons" 
-				if find_room_in_dungeon(@player.location).reference == :start_mountain_pass
+				if @dungeon.find_room_in_dungeon(@location).reference == :start_mountain_pass
 					puts "\nYou put the talons over your paws. You nod approvingly as you test the extra reach they provide you with."
-					@player_item.select {|i| i.name == "huge-talons"}[0].used = true 
-					if !@player_item.select {|i| i.name == "draconian-armor"}.empty? #make sure player has item. before testing if its been used.
-						if@player_item.select {|i| i.name == "draconian-armor"}[0].used == true 
+					items.select {|i| i.name == "huge-talons"}[0].used = true 
+					if !items.select {|i| i.name == "draconian-armor"}.empty? #make sure player has item. before testing if its been used.
+						if items.select {|i| i.name == "draconian-armor"}[0].used == true 
 							puts "\nCombined with your armor, you are fit for combat. You're prepared to cross the pass now." #if player has item and it is used.
-							find_room_in_dungeon(@player.location).add_connection([:south, :mountain_pass])
-							@player_item.delete_if {|i| i.name == "huge-talons"}
-							@player_item.delete_if {|i| i.name == "draconian-armor"}
-							unlock_room	
+							@dungeon.find_room_in_dungeon(@location).add_connection([:south, :mountain_pass])
+							items.delete_if {|i| i.name == "huge-talons"}
+							items.delete_if {|i| i.name == "draconian-armor"}
+							@dungeon.unlock_room	
 						else
 							puts "You feel much more secure now, but doubt it will be enough against the griphons." #if player has item but has not been used.
 						end
@@ -325,96 +359,62 @@ class Dungeon
 			puts "\nYou do not appear to have that item with you."
 		end
 	end
-	def take(item_name)
-		if !find_room_in_dungeon(@player.location).items.select {|i| i.name == item_name}.empty? #Player can only take items in the room. 
-			@player_item = @player_item + find_room_in_dungeon(@player.location).items.select {|i| i.name == item_name}
-			find_room_in_dungeon(@player.location).items.delete_if {|i| i.name == item_name}
-			puts "You put the " + item_name + " in you sack."
-		else
-			puts "That item is not in this room."
-		end
-	end
-	
-	def directions
-		puts "\nFrom here you can go: \n"
-		find_room_in_dungeon(@player.location).connections.keys.each {|i| puts i.to_s + "\n"}
-	end
 	def which_item_in_backpack
-		if !@player_item.empty?
+		if !@items.empty?
 			s = ""
 			s += "\nYou have in your sack:"
-			@player_item.each {|i| s += "\n" + i.name.to_s}
+			@items.each {|i| s += "\n-" + i.name.to_s}
 			puts s
 		else
 			puts "\nYour sack is empty."
 		end
 	end
-	def inspect_item(item_name)
-		all_items = @player_item + find_room_in_dungeon(@player.location).items
-		if !all_items.select {|i| i.name == item_name}.empty?
-			puts all_items.select {|i| i.name == item_name}.first.description
-		else
-			puts "You can't find that item nor have it in your backpack."
-		end
-	end
-	def unlock_room()
-		find_room_in_dungeon(@player.location).unlocked = true
-	end
 	def possible_actions
 		puts "\nPossible actions: \n-directions\n-go <north/south/east/west>\n-take <item>\n-inspect <item>\n-use <item>\n-sack\n-exit"
+	end	
+end
+
+class Item
+	attr_accessor :name, :description, :used
+
+	def initialize(name, description)
+		@name = name
+		@description = description
+		@used = false
 	end
+end
 
-	class Player
-		attr_accessor :name, :location, :items
+class Room
+	attr_accessor :reference, :name, :unlocked, :description, :connections, :items
 
-		def initialize(player_name)
-			@name = player_name
-			@items = []
-		end
+	def initialize(reference, name, description, connections, items)
+		@reference = reference
+		@name = name
+		@unlocked = false
+		@description = description
+		@connections = connections
+		@items = items
 	end
-	
-	class Item
-		attr_accessor :name, :description, :used
-
-		def initialize(name, description)
-			@name = name
-			@description = description
-			@used = false
+	def full_description
+		s = ""
+		s += "\n\n" + name + "\n\n" + read_description
+		if @items.any?
+			s += "\n\nYou find: " 
+			@items.each { |i| s += i.name + ", " }
 		end
+		return s
 	end
-
-	class Room
-		attr_accessor :reference, :name, :unlocked, :description, :connections, :items
-
-		def initialize(reference, name, description, connections, items)
-			@reference = reference
-			@name = name
-			@unlocked = false
-			@description = description
-			@connections = connections
-			@items = items
-		end
-		def full_description
-			s = ""
-			s += "\n\n" + name + "\n\n" + read_description
-			if @items.any?
-				s += "\n\nYou find: " 
-				@items.each { |i| s += i.name + ", " }
-			end
-			return s
-		end
-		def read_description
-			s = ""
-			s = "********\n" if @unlocked == true #make it clear the text has changed from the first by adding *** before the text. 
-			s += @description[@unlocked].to_s #show text based on unlocked status.
-			s
-		end
-		def is_adjoining_rooms?(direction)
-			!@connections[direction].nil?
-		end
-		def add_connection(conn)
-			@connections[conn[0]] = conn[1]
-		end
+	def read_description
+		s = ""
+		s = "********\n" if @unlocked == true #make it clear the text has changed from the first by adding *** before the text. 
+		s += @description[@unlocked].to_s #show text based on unlocked status.
+		s
+	end
+	def is_adjoining_rooms?(direction)
+		!@connections[direction].nil?
+	end
+	def add_connection(conn)
+		@connections[conn[0]] = conn[1]
 	end
 end
 
@@ -428,19 +428,19 @@ input = gets.chomp.to_s.split(' ')
 while !(input[0] == "exit") #or !(d.find_room_in_dungeon(d.player.location).reference == :home)
 	case input.shift #take of first element of input for input in case. input array now no longer has first word.
 	when "directions"
-		d.directions
+		d.player.directions
 	when "sack"
-		d.which_item_in_backpack
+		d.player.which_item_in_backpack
 	when "go"
-		d.go(input.join.to_sym)
+		d.player.go(input.join.to_sym)
 	when "take"
-		d.take(input.join)
+		d.player.take(input.join)
 	when "use"
-		d.use(input.join(' '))
+		d.player.use(input.join(' '))
 	when "inspect"
-		d.inspect_item(input.join)
+		d.player.inspect_item(input.join)
 	when "actions"
-		d.possible_actions
+		d.player.possible_actions
 	else
 		puts "\nYou scratch behind your ears and think. \nNo you really don't know how to do that.."
 	end
