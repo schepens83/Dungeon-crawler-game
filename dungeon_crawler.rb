@@ -1,3 +1,5 @@
+require 'yaml'
+
 class Dungeon
 	attr_accessor :player
 
@@ -14,6 +16,15 @@ class Dungeon
 		puts "+++++++++++++++++++"
 		show_current_description
 	end
+	def show_current_description
+		puts find_room_in_dungeon(@player.location).full_description
+	end
+	def find_room_in_dungeon(reference)
+		@rooms.detect { |room| room.reference == reference}
+	end
+
+	private
+
 	def build_world
 		add_room(:meadow_road, 
 			"Meadow Road", 
@@ -145,13 +156,7 @@ class Dungeon
 			{false => "Cheerfully you climb the wide circling hallway up to your lair. The emperors ancestors had this especially made for your lineage. As you round the top you hear the cheers of joy and surprise as your young hatchlings see you. Calling out with joy they run and jump on top of you. Laughing, you let them and start playfully tossing them around. Later, there will be time to give report to the emperor of your destruction of the human and elven rebellion. For now you enjoy the simple play of your family.\n\n\n\n"},
 			{:north => :start_mountain_pass},
 			[])
-	end
-	def show_current_description
-		puts find_room_in_dungeon(@player.location).full_description
-	end
-	def find_room_in_dungeon(reference)
-		@rooms.detect { |room| room.reference == reference}
-	end
+	end	
 	def add_room(reference, name, description, connections, items)
 		@rooms << Room.new(reference, name, description, connections, items)
 	end
@@ -395,6 +400,7 @@ class Room
 		@connections = connections
 		@items = items
 	end
+
 	def full_description
 		s = ""
 		s += "\n\n" + name + "\n\n" + read_description
@@ -418,8 +424,45 @@ class Room
 	end
 end
 
-d = Dungeon.new("Sander")
-d.start(:meadow_road)
+class Gamestorage
+
+	def initialize(player_name)
+		Dir.mkdir "savegames" unless Dir.exists? "savegames"
+		plyrname = player_name.chomp.gsub(/^.*(\\|\/)/, '').gsub(/[^0-9A-Za-z.\-]/, '_').downcase #sanitize for saving.
+		@path = "savegames/#{plyrname}"
+	end
+
+	def save_game(dungeon_object)
+		save_yaml = YAML::dump(dungeon_object)
+		f = File.open(@path, 'w') do |f|
+			f.write save_yaml
+		end
+	end
+
+	def load_game
+		f = File.open(@path).readlines.join()
+		YAML::load(f)
+	end
+
+	def save_exists?
+		File.exists? @path
+	end
+end
+
+puts "Game will automatically resume if you've played before. (based on your name)"
+puts "What is your name?"
+player = gets.chomp
+storage = Gamestorage.new(player)
+
+if storage.save_exists?
+	#load from previous game
+	d = storage.load_game
+	d.show_current_description
+else
+	#create a new game
+	d = Dungeon.new(player)
+	d.start(:meadow_road)
+end
 
 puts " "
 puts "Choose an action. \nType actions, to get a hint for possible actions you can take."
@@ -453,3 +496,5 @@ while !(input[0] == "exit") #or !(d.find_room_in_dungeon(d.player.location).refe
 	end
 end
 
+#save game for user.
+storage.save_game(d)

@@ -1,0 +1,556 @@
+--- &1 !ruby/object:Dungeon
+player: !ruby/object:Player
+  name: Sander
+  items: []
+  dungeon: *1
+  location: :meadow_road
+rooms:
+- !ruby/object:Room
+  reference: :meadow_road
+  name: Meadow Road
+  unlocked: false
+  description:
+    false: "You find yourself on a road surrounded by peacefull looking meadows. Sheep
+      and cows roam the grasslands and you can almost imagine the shepard whistling
+      to his dog. There is no shepard however and with this many sheep that strikes
+      you as unusual. \nIt is nowhere near sunset but, as you look up in the sky,
+      a long red streak is visible across the sky. A dark omen if ever you saw one."
+  connections:
+    :south: :small_town
+    :north: :enchanted_forest
+    :east: :canyon
+  items: []
+- !ruby/object:Room
+  reference: :canyon
+  name: Narrow Canyon
+  unlocked: false
+  description:
+    false: "You're at the entrance of a long canyon. The sun sits high in the sky
+      and shines it's unrelenting heath upon you.\nA giant eagle keeps circling above
+      you, as if waiting for the sun to do its work. The rocks and thorny bushes make
+      navigating the canyon hard. \nWhen looking around, you spot an ancient piramid
+      crested near the side of the canyon. Upon climbing it you find a large magnifying
+      glass placed solidly on the top. You try to pry it loose, but it won't budge.
+      There are burn marks surrounding it. Head shaking as you wonder on the strange
+      religions in the world you continue your travels."
+  connections:
+    :west: :meadow_road
+    :south: :hilly_country
+  items:
+  - !ruby/object:Item
+    name: feather
+    description: |2-
+
+      This feather looks useless and you start to think maybe you shouldn't have picked it up. You've had weirder items turn usefull before however.
+    used: false
+- !ruby/object:Room
+  reference: :hilly_country
+  name: Hilly Country
+  unlocked: false
+  description:
+    false: A lovely trail meanders up and down through forests and hils in front of
+      you. As you continue to walk, you snap out of your daydreams when you notice
+      many footprints on the trail. It appears a large group of people have recently
+      moved through this area. As you continue to walk, you find they dropped some
+      small items besides the road. Unfortunately most of them are useless.
+  connections:
+    :north: :canyon
+    :west: :small_town
+  items:
+  - !ruby/object:Item
+    name: key
+    description: |2-
+
+      A huge rusty key. It seems this could not have been used in any ordinary household. It must be a big door indeed to fit it in.
+    used: false
+- !ruby/object:Room
+  reference: :small_town
+  name: Small Town
+  unlocked: false
+  description:
+    false: You're standing in front of the entrance of a small town. The entrance
+      sign says 'stand united against the empire', a rallying cry that was gaining
+      popularity lately. Pop:206, it says below, but smaller numbers have been crossed
+      out a couple of times. Now it looks like a ghost town as - after some looking
+      around - you find nobody there. The inhabitants apparantly all left in a hurry.
+      There is a big square in the center of town with a beautifull fountain. Dolphin's
+      continue to spew water for the enjoyment of an abandoned village. Shaking of
+      a feeling of annoyment, you spot a huge mansion at the head of the square. The
+      only one fit for you to loot, unfortunately it's locked. You find that not even
+      you are able to break in through the big entrance door..
+    true: You're standing in front of the ruins of the little village you passed shortly
+      before. The villagers were right to abbandon it you think. As you make yourself
+      through the ruins you find the fountain and the mansion still intact.
+  connections:
+    :north: :meadow_road
+    :east: :hilly_country
+  items: []
+- !ruby/object:Room
+  reference: :entrance_cave
+  name: Entrance to a Cave
+  unlocked: false
+  description:
+    false: You spot a cave in the distance. After a hike up a small trail you're standing
+      in front of it. You try to look inside but it's to dark to see. If only you
+      had some light.
+    true: |2-
+
+      You spot a cave in the distance. After a hike up a small trail you'r standing in front of it. You try to look inside but it's to dark to see. Luckily your torch lights the way.
+  connections:
+    :south: :enchanted_forest
+  items: []
+- !ruby/object:Room
+  reference: :enchanted_forest
+  name: Enchanted Forest
+  unlocked: false
+  description:
+    false: You arrive at a strangely circularly shaped forest and conclude it can
+      only be the enchanted forest of the elves. Nearing the edge you spot a beautifull
+      arch enshrined with near-real elven statues. As you venture towards the centre
+      of the forest, you find the remains of an elven shaman's occult ritual. The
+      victim of its bloodsacrificing - a little squirrel - lifeless on the shrine.
+      It seems the elves as well consider the red smear across the sky a bad omen.
+      Although you consider yourself open minded, you doubt sacrificing a squirrel
+      will do any good. As you continue, a hideous odour penetrates your nose. It
+      seems some elves had the same doubts and found their refuge in some hard liquor.
+      You find them hungover and lying in their own barf.
+    true: As you once again enter the enchanted forest it now feels much darker. You
+      find no hungover elves this time, only abandoned treehouses. A massacre occured
+      here not long ago. In the center of the forest there appears to be a mass-grave,
+      not yet covered. You find a lonely squirrel moving about. As you turn around
+      to leave, you feel that there is some poetic justice there.
+  connections:
+    :south: :meadow_road
+    :north: :entrance_cave
+  items:
+  - !ruby/object:Item
+    name: drinking-bag
+    description: |2-
+
+      Very large drinking bag made from the skin of a deer. It seems originally to be intended as sacrifice, but in their stupor the elves have used it for their drinking games. The smell of hard liquor still remains inside.
+    used: false
+- !ruby/object:Room
+  reference: :cave_tunnel
+  name: Cave Tunnel
+  unlocked: false
+  description:
+    false: Carefully you step in the cave. You once heard a story of a little boy
+      that ventured inside a cave and wandered for days. As it happens that story
+      might have been the origin of your cavephobia. Repressing your feelings of impending
+      doom, you continue on. Halfway through, you come upon a group of men holding
+      camp. They look starved but still provide you with some meat. It's not nearly
+      enough to fill your stomache, but you take what you can get and continue on.
+      The rest of your travel through the cave is uneventfull.
+  connections:
+    :west: :entrance_cave
+    :east: :start_desert
+  items: []
+- !ruby/object:Room
+  reference: :start_desert
+  name: Endless Desert
+  unlocked: false
+  description:
+    false: From the entrance of the cave stretches out an endless desert. You start
+      feeling as if catched between a rock and a hard place. Although you think you
+      can last quite a long while without water, you dare not venture in the desert
+      without any liquid substances. You also don't particularly look forward to going
+      back through the cave, though.
+    true: A vast desert stretches out before you. Reassured by the drinking-bag you
+      continue to walk up the first sand dune.
+  connections:
+    :west: :cave_tunnel
+  items: []
+- !ruby/object:Room
+  reference: :east_desert
+  name: Endless Desert
+  unlocked: false
+  description:
+    false: Small heatwaves slowly radiate on the horizon. The desert stretches out
+      endlessly to all sides. You curse yourself for not having thought to take some
+      kind of shade with you. The sun pounces relentlessly and your head is starting
+      to throb. With a slight headache coming up behind your ears, you continue your
+      voyage.
+  connections:
+    :west: :start_desert
+    :north: :north_east_desert
+    :south: :south_east_desert
+  items: []
+- !ruby/object:Room
+  reference: :north_east_desert
+  name: Endless Desert
+  unlocked: false
+  description:
+    false: "You stand beside your liege's throne as he stands up in the middle of
+      his tirade against one of his vassal-byrons. On occasions such as these he likes
+      to have you around to intimidate people. The throneroom is large and wide. Long
+      tapestries depicting the empires' battles fall down on the sides of the walls.
+      One of them depicts a single rider on his dragon, atacking a whole regiment
+      of some long forgotten kingdom. You're especially fond of that one as it is
+      your grandfather immortalized. A sense of pride fulfills you as you think of
+      the long history of service and loyalty your family has with the empire. As
+      you turn back you see your family as the young ones run around their mothers
+      feet. Their play boisterous but harmless as they scurry along the inner keeps
+      yard. \nWith a snap you startle awake. A small lizard slides away in it's hole.
+      You try to calm your nerves. The desert is nowhere near as empty as it seems
+      during the day. Nowhere near as hot as well. You decide to travel on during
+      the remainder of the night, although you will have to be lucky to find some
+      shade to sleep during the day."
+  connections:
+    :south: :east_desert
+    :west: :north_desert
+  items: []
+- !ruby/object:Room
+  reference: :north_desert
+  name: Endless Desert
+  unlocked: false
+  description:
+    false: As you stumble your way forward you find another fata-morgana shimmering
+      to your right. Desperate enough you decide to check this one out. It's out of
+      the way you were heading, but you won't be able to survive much longer anyway.
+      It really is a very pragmatic decision. You laugh at the irony of this force
+      of nature succeeding where so many others have failed. It's approaching sunset
+      when you near the oasis. The shimmering surrounding the visage had stopped with
+      the sun getting lower, so you no longer doubt its real. With a sigh of relief
+      you drop down besides the small pond in the oasis. After refilling your bag
+      you decide to stay here for a couple of days to recuperate and try to hunt for
+      some game.
+  connections:
+    :south: :start_desert
+    :east: :north_east_desert
+  items: []
+- !ruby/object:Room
+  reference: :south_east_desert
+  name: Endless Desert
+  unlocked: false
+  description:
+    false: Walking through this inhospitable country you see some sparse bushes far
+      away. You might at last be nearing the end of your journey through the desert.
+      You stumble on something. The desert is smooth as sand so you turn around to
+      take a closer look. It's a leather cord that caught your feet. You feel its
+      attached to something and start to dig it out. The leather was part of a big
+      armored horse. The skeleton of the horse is clean sanded by sandstorms. The
+      armor is still mostly intact though.
+    true: Walking through this inhospitable country you see some sparse bushes far
+      away. You might at last be nearing the end of your journey through the desert.
+  connections:
+    :north: :east_desert
+    :west: :south_desert
+    :south: :tundra
+  items:
+  - !ruby/object:Item
+    name: horse-armor
+    description: |2-
+
+      Slightly rusted. The horse you found it on won't have any use for it anymore. Mayhaps you find opportunity to make use of it in the future in some way.
+    used: false
+- !ruby/object:Room
+  reference: :south_desert
+  name: Endless Desert
+  unlocked: false
+  description:
+    false: "It seems now like there is no other world besides these endlessly rolling
+      dunes. You go down one and up another. Down another again. The cycle repeats
+      .. infinitely. As you crest another dune you spot the tail end of a small caravan
+      in the distance. You think about following it to ask for directions, but as
+      they move in the wrong direction you decide otherwise. Catching up would take
+      the better part of a day at least. You don't deem it worthy enough for a detour.
+      \nComing down one side of the dune, you continue your way up the next."
+  connections:
+    :north: :start_desert
+    :east: :south_east_desert
+  items: []
+- !ruby/object:Room
+  reference: :tundra
+  name: Tundra
+  unlocked: false
+  description:
+    false: The landscape around you shows subtle changes. The sand beneath you is
+      replaced with rocky ground and trees are found sparingly across the horizon.
+      You've entered the tundra on the edges of the empires borders. The horse-people
+      that ride these lands are a proud people and have long defied the empire's rule.
+      Their strenght though comes mostly from their speed and mobility, which would
+      be much less usefull in the empire's land. Trapped between the desert and the
+      empire an uneasy status quo had settled in early on in their history. Years
+      of economic starvation and isolation had decimated their numbers. they now were
+      no longer a serious threat for anyone but a lonely traveller. You warily keep
+      your eyes on the horizon as you make your way through the land.
+  connections:
+    :north: :south_east_desert
+    :west: :tundra_west
+    :south: :forest
+  items: []
+- !ruby/object:Room
+  reference: :tundra_west
+  name: Tundra
+  unlocked: false
+  description:
+    false: "An hour ago you spotted a lone horseman behind you on the horizon. Horsemen
+      are known to travel and hunt in packs, so you're sure there must be more. You
+      might have scared them off, but horsemen are hardly cowards and spotting you
+      might have put ideas of revenge in their heads. Your orders did not involve
+      the horsemen and the more prudent thing to do was avoid them. As you contemplate
+      your next move you spot a dust cloud behind you. It seems the choice was taken
+      from you. The land does not give much opportunity for hiding. Fortunately if
+      you increase your tempo now, it will be nightfall when they overtake you. Calmly
+      you fall in to an easy run. \nAs you run, you think over your options. The horsemen
+      are stubborn and will most likely not relent. They will disperse during the
+      night and weave a large net in which they hope to catch you. As dusk sets in
+      you no longer see a dust cloud behind you. Either they relented or did as you
+      predicted. After a while you find yourself in a more adventageous landscape.
+      A labyrinth of tall rocks that reach above your head. Your ears catch the muffled
+      sound of a horse with cloth tied around its feet. Another favorite trick of
+      the horsemen. Luckily your ears are sharper than average men's and as you hide
+      in a small crevace a lone rider passes you by. Silently you move up to him from
+      behind. If the rider spots you he will whistle loudly, whereby calling the rest
+      of the pack down on you. You cross the last couple of meters in a dash. The
+      rider turns around in alarm, but you jump on top of the horse and take the rider
+      out before he can call his friends. With another quick move you silence the
+      horse. Quickly you look through the riders bags. Nothing remarkable except a
+      set of middle-long, blunt blades. \nRethinking what to do now, you turn around
+      and head back. The horsemens' net now has a hole and you intend to slip through
+      it. The rest of the night you spend running back in the direction you came from.
+      Come morning you find no trace of horsemen."
+    true: You find no trace of the horsemen this time and with an infallable memory
+      you backtrack to the place you ambushed the horsemen. No trace of him to be
+      found anymore, so his comrades must have found him. You find the blunt blades
+      still where you buried them.
+  connections:
+    :east: :tundra
+  items:
+  - !ruby/object:Item
+    name: blunt-blades
+    description: |2-
+
+      Not much use in current form. Though you think most weapons are useless. These particular ones might be reworked to your use.
+    used: false
+- !ruby/object:Room
+  reference: :forest
+  name: Forest
+  unlocked: false
+  description:
+    false: You enter the forest with some feeling of relief. The forest quickly becomes
+      denser and soon blocks out most of the light. After a couple of hours you come
+      across a small road. You quickly take your bearing and decide which route to
+      take. The road meanders through the forest and you're now able to make good
+      time. Not long afterwards you come upon a man hanging from a big tree. His head
+      marked with the tatoo of a rapist, it seems his last transgression was met with
+      a different punishment. The rope that was used looks sturdy and strong.
+  connections:
+    :north: :tundra
+    :south: :riverland
+  items:
+  - !ruby/object:Item
+    name: rope
+    description: |2-
+
+      Long and firm, this rope looks thick enough to bind a dragon. You chuckle. That's not likely to happen anytime soon.
+    used: false
+- !ruby/object:Room
+  reference: :riverland
+  name: A wide river
+  unlocked: false
+  description:
+    false: You come upon a wide river. With quick currents and steep riversides, you
+      won't be able to cross it on foot. Looking both ways you aren't spotting a bridge
+      or friendly ferryman. Unsure which way to go, you mentally toss a coin and choose
+      a direction to follow the river.
+    true: Back at the river again. Your raft still floats peacefully where you left
+      it.
+  connections:
+    :north: :forest
+    :east: :river_to_mountain
+    :west: :ocean
+  items: []
+- !ruby/object:Room
+  reference: :river_to_mountain
+  name: Mountainside river
+  unlocked: false
+  description:
+    false: Following the river upstream for days you find it disappears in the side
+      of a steep mountainside. No way around it here. Not a good place to cross the
+      river anyway, as it's teeming with a particularly nasty looking breed of crocodiles.
+      This way looks like a dead end.
+  connections:
+    :west: :riverland
+  items:
+  - !ruby/object:Item
+    name: crocodile-teeth
+    description: |2-
+
+      You found this on the skull of dead crocodile, by the side of the river. Sharp as hell, you think it might be of some use in the future.
+    used: false
+- !ruby/object:Room
+  reference: :ocean
+  name: River to Ocean
+  unlocked: false
+  description:
+    false: "Following the river downstream made you wish for some way to travel -
+      on - the river, instead of - besides -. Ofcourse, if you had a means to travel
+      on the river, you wouldn't need to travel downstream. \nThe river was slowly
+      widening out and turning itself slightly into mangrove. Which wasn't going to
+      make it any easier. After half a day you spot the rivers end, where it flows
+      in the ocean and an hour later you walk up to the beach. Rocks protrude a little
+      farther out the bay. When the tide rises those will be under water. Dangerous
+      place without a lighthouse. As if to prove your point you find a lot of driftwood
+      from a shipwreck on the beach not half a kilometre from the river. Lost for
+      cause, you sit down and make camp for the evening. You think on what to do next."
+  connections:
+    :east: :riverland
+  items:
+  - !ruby/object:Item
+    name: driftwood
+    description: |2-
+
+      Thick beams from the mast and solid planks from the rutter. Sturdy stuff and certainly good enough as basematerial for anything you could think of.
+    used: false
+- !ruby/object:Room
+  reference: :farmland
+  name: Fields of Corn
+  unlocked: false
+  description:
+    false: Travelling through fields of maize and corn you find yourself in a most
+      furtile part of the empire. The farmers working the fields look weary as you
+      pass them by, but your sight is familiar to them and the distance is far enough
+      to not scare them away. Restless now you're in the empire, you continue on your
+      way.
+  connections:
+    :north: :riverland
+    :south: :mountain
+    :west: :smithy
+  items: []
+- !ruby/object:Room
+  reference: :mountain
+  name: A Towering Mountain
+  unlocked: false
+  description:
+    false: You feel the end of your journey approaching and you're anxious to get
+      home. You stand at the foot of an enormous mountain. A couple of hours earlier
+      it slowly started to snow and the ground is now blanketed white. The slow swirl
+      of falling snowflakes will be a turmulent storm on top of the mountain. Your
+      timing could not have been worse. You're glad that you're familiar with this
+      terrain, since you vaguely recall that there is a pass to the east.
+  connections:
+    :north: :farmland
+    :east: :start_mountain_pass
+    :west: :canyon_topside
+  items: []
+- !ruby/object:Room
+  reference: :start_mountain_pass
+  name: Entrance to the Eastern Mountain Pass
+  unlocked: false
+  description:
+    false: As you approach the mountain pass you spot 6 Griphons circling high in
+      the sky. News of your assignment must have reached your mortal enemies. Going
+      up the mountain pass now will leave you in open territory and sure to be spotted.
+      Two or three you could have handled but fighting six would make an uncertain
+      outcome. For the first time on this quest you feel remorse for leaving your
+      battle-gear at home.
+    true: The six griphons still circle the pass, but you feel emboldened by being
+      armed and armored to move forward.
+  connections:
+    :west: :mountain
+  items: []
+- !ruby/object:Room
+  reference: :mountain_pass
+  name: The Eastern Mountain Pass
+  unlocked: false
+  description:
+    false: "Carefully you crouch beside one of the last trees before the large and
+      open plain of the pass. You see six of them circling directly above you, which
+      probably means they've spotted you. Griphons are not known for their intelligence,
+      but they are pack animals and their instincts for hunting are excellent. Being
+      in the air means they have the advantage of choosing the battleground, which
+      will probably be out in the open where they can come from all sides. You prefer
+      to have the initiative though and even though you feel confident, you decide
+      to wait till darkness sets in. Griphons's nightsight is equal to your own, but
+      the night is dark tonight and they will need to fly low or risk losing you.
+      \n\nYou slowly walk out the forest and look up. The sliver of the moon is invisible
+      behind thick dark clouds. The effect is somewhat diminished by the whiteness
+      of the snow, brightening the night. It will have to do. Non of the beasts nearby
+      as far as you can make out though. Carefully you set out. \n\nWhen you hear
+      the screech hours later, you almost thought you had gotten rid of them. You
+      crouch down and look up towards the sound. Three of them are flying low about
+      50 meters from your right. They fly parralel to you and are not preparing to
+      attack. That doesn't make sense. Why alert you and give time to ... You get
+      hit sideways by some large weigth. Instinctively you crouch and try to lower
+      your point of gravity but your reaction was late and you find yourself falling
+      sideways. As you do so however, you wip around your tail and are rewarded by
+      solid contact and a pained screech. You manage to grab hold and are pulled up
+      by the griphon trying to get away. The two others that were right behind, suddenly
+      like their situation much less and try to change their collision course. Using
+      the momentum gained by your tail action, you swing your body towards the closest
+      of the two trailing and manage to make a solid connection with one of its wings.
+      Screeching and whimpering it goes down. You whip yourself up towards the griphon
+      you're 'riding' and finish it off by swinging your talon and seperating its
+      head from body. Quickly you manage to turn around mid air as you fall down and
+      land on your four feet. You look around and see the griphon who you managed
+      to collide with, try to limp away. You're tempted to finish it off, but you
+      don't know where the others are and in a quick movement you circle around. The
+      three diversions had used the time to approach from the right, while the third
+      initial attacker had joined them. They look more uncertain now and start circling
+      around you. The wounded one on the ground screeches out to them and with more
+      confidence in their flight, they move out to protect it. That must be the leader
+      than. You feel a pang of regret you didn't take him out when you had the chance,
+      but repress it. You made the sensible move as it would have left you open for
+      attack. Slowly you start to circle around the leader and re-evaluate the situation.
+      You realize this fight is over. Griphons without the leader of the pack have
+      little appetite for danger. As you've shown them you can handle six they won't
+      come back with four. Especially with their leader incapacitated and grounded.
+      You are not the one that needs to finish this fight. Moving backwards and out
+      of sight you hear a last angry screech as they realize the same. \n\nMoving
+      quickly through the night you leave the mountain pass - and the griphons - behind
+      you."
+  connections:
+    :west: :home
+  items: []
+- !ruby/object:Room
+  reference: :canyon_topside
+  name: Top of the Canyon
+  unlocked: false
+  description:
+    false: Slowly you approach the cliff. It's a sheer drop of a couple of hundred
+      meters down to the bottom of this canyon. A few meters below the precipice you
+      see the nest of a big eagle. You drop down to take a look and find some unhatched
+      eggs. It's been a while since you've eaten and hungrily you take this opportunity.
+      As you climb back up the cliff you smile as you see a small piramid someplace
+      far down below.
+  connections:
+    :east: :mountain
+    :north: :smithy
+  items:
+  - !ruby/object:Item
+    name: eagle-egg
+    description: |2-
+
+      Saving one for later you restrained yourself and took one egg with you. At least for some time, you won't go hungry.
+    used: false
+- !ruby/object:Room
+  reference: :smithy
+  name: Big village
+  unlocked: false
+  description:
+    false: "You approach a large village and enter through the main gate. The streets
+      have emptied as its population hides inside their houses. You know this village
+      and would have left it alone if you didn't need something. Walking along the
+      main road you approach the smithy. \nThough the smith is a big man, he is unwilling
+      to come outside at first. You have to insist. Although the stick would have
+      been enough, you feel sorry enough for the men to use the carrot as well. You
+      promise him he will be compensated by the empire. He seems willing to work his
+      trade."
+  connections:
+    :south: :canyon_topside
+    :east: :farmland
+  items: []
+- !ruby/object:Room
+  reference: :home
+  name: Dragon's Den
+  unlocked: false
+  description:
+    false: |+
+      Cheerfully you climb the wide circling hallway up to your lair. The emperors ancestors had this especially made for your lineage. As you round the top you hear the cheers of joy and surprise as your young hatchlings see you. Calling out with joy they run and jump on top of you. Laughing, you let them and start playfully tossing them around. Later, there will be time to give report to the emperor of your destruction of the human and elven rebellion. For now you enjoy the simple play of your family.
+
+
+
+  connections:
+    :north: :start_mountain_pass
+  items: []
