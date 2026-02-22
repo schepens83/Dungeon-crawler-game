@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dungeon Crawler - Explorer</title>
+    <script src="https://cdn.jsdelivr.net/npm/@ruby/3.3-wasm-wasi@2.6.2/dist/browser.script.iife.js"></script>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --panel-color: #161616;
+            --text-color: #c9b991;
+            --accent-color: #7a0000;
+            --border-color: #333;
+            --highlight-color: #c5a059;
+        }
+        
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: "Georgia", serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+        
+        #scene-visualization { 
+            flex: 0 0 30%; 
+            background: linear-gradient(to bottom, #000, #161616); 
+            border-bottom: 2px solid var(--accent-color); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+        }
+        
+        #scene-visualization::after { 
+            content: "VISUALIZING SCENE..."; 
+            font-size: 0.7rem; 
+            letter-spacing: 0.3rem; 
+            color: #333; 
+            animation: pulse 3s infinite; 
+        }
+        
+        @keyframes pulse { 0% { opacity: 0.2; } 50% { opacity: 0.5; } 100% { opacity: 0.2; } }
+        
+        #narrative-container { 
+            flex: 1; 
+            padding: 30px; 
+            overflow-y: auto; 
+            background-image: radial-gradient(circle at center, #161616 0%, #0a0a0a 100%); 
+            scrollbar-width: thin; 
+            scrollbar-color: var(--accent-color) var(--bg-color);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .scene-content { 
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.7; 
+            animation: fadeIn 0.6s ease-in-out; 
+            padding-bottom: 40px; /* Zorg dat tekst onderaan niet tegen de rand zit */
+        }
+        
+        .room-name { 
+            font-size: 1.6rem; 
+            color: var(--highlight-color); 
+            margin-bottom: 1.5rem; 
+            border-bottom: 1px solid var(--accent-color); 
+            display: block; 
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .action-feedback {
+            color: #888;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            min-height: 1.2rem;
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        #action-panel { 
+            background-color: var(--panel-color); 
+            padding: 15px; 
+            display: grid; 
+            grid-template-columns: 1fr 1.5fr 1fr; 
+            gap: 15px; 
+            height: 170px; 
+            border-top: 2px solid var(--accent-color);
+            box-sizing: border-box;
+            z-index: 10;
+        }
+        
+        .action-group { display: flex; flex-direction: column; gap: 8px; justify-content: flex-start; }
+        
+        button { 
+            background-color: #111; 
+            border: 1px solid var(--border-color); 
+            color: var(--text-color); 
+            padding: 10px; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            font-family: inherit; 
+            text-transform: uppercase; 
+            font-size: 0.65rem; 
+            letter-spacing: 1px; 
+        }
+        
+        button:hover:not(:disabled) { 
+            background-color: var(--accent-color); 
+            border-color: var(--highlight-color); 
+            color: white; 
+        }
+        
+        button:disabled { opacity: 0.05; cursor: not-allowed; border-color: #222; }
+        
+        #nav-grid { display: grid; grid-template-columns: repeat(3, 42px); grid-template-rows: repeat(2, 42px); gap: 8px; width: fit-content; margin: 0 auto; }
+        .btn-north { grid-column: 2; }
+        .btn-west { grid-column: 1; grid-row: 2; }
+        .btn-south { grid-column: 2; grid-row: 2; }
+        .btn-east { grid-column: 3; grid-row: 2; }
+        
+        #inventory-list { font-size: 0.75rem; height: 90px; overflow-y: auto; border: 1px solid #222; padding: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; color: #888; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: black; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
+        .spinner { width: 40px; height: 40px; border: 2px solid #111; border-top: 2px solid var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="loading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p style="margin-top: 25px; letter-spacing: 3px; color: #444; font-size: 0.6rem;">INITIALIZING DUNGEON...</p>
+    </div>
+
+    <div id="scene-visualization"></div>
+
+    <div id="narrative-container">
+        <div id="action-feedback" class="action-feedback"></div>
+        <div id="scene-text" class="scene-content"></div>
+    </div>
+
+    <div id="action-panel">
+        <div class="action-group">
+            <div style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">NAVIGATIE</div>
+            <div id="nav-grid">
+                <button class="btn-north" onclick="window.gameCommand('ga', 'noord')" id="btn-noord" disabled>N</button>
+                <button class="btn-west" onclick="window.gameCommand('ga', 'west')" id="btn-west" disabled>W</button>
+                <button class="btn-south" onclick="window.gameCommand('ga', 'zuid')" id="btn-zuid" disabled>Z</button>
+                <button class="btn-east" onclick="window.gameCommand('ga', 'oost')" id="btn-oost" disabled>O</button>
+            </div>
+        </div>
+
+        <div class="action-group">
+            <div style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">INTERACTIE</div>
+            <div id="dynamic-actions" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 5px;"></div>
+        </div>
+
+        <div class="action-group">
+            <div style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">RUGZAK</div>
+            <div id="inventory-list">Je zak is leeg.</div>
+        </div>
+    </div>
+
+    <script>
+        window.updateFeedback = function(text) {
+            document.getElementById('action-feedback').innerHTML = text ? text.split('\n').join('<br>') : '';
+        };
+
+        window.updateScene = function(text) {
+            document.getElementById('scene-text').innerHTML = text.split('\n').join('<br>');
+            document.getElementById('narrative-container').scrollTop = 0;
+        };
+
+        window.updateNavigation = function(dirString) {
+            const directions = dirString ? dirString.split(',') : [];
+            ['noord', 'zuid', 'oost', 'west'].forEach(dir => {
+                const btn = document.getElementById('btn-' + dir);
+                if (btn) btn.disabled = !directions.includes(dir);
+            });
+        };
+
+        window.updateRoomItems = function(itemsString) {
+            const items = itemsString ? itemsString.split(',') : [];
+            const container = document.getElementById('dynamic-actions');
+            container.innerHTML = '';
+            items.forEach(item => {
+                if (!item) return;
+                const btn = document.createElement('button');
+                btn.textContent = 'PAK ' + item;
+                btn.onclick = () => window.gameCommand('pak', item);
+                btn.style.borderColor = 'var(--highlight-color)';
+                container.appendChild(btn);
+            });
+        };
+
+        window.updateInventory = function(itemsString) {
+            const items = itemsString ? itemsString.split(',') : [];
+            const list = document.getElementById('inventory-list');
+            if (!itemsString || items.length === 0 || (items.length === 1 && items[0] === "")) {
+                list.textContent = 'Je zak is leeg.';
+            } else {
+                list.innerHTML = items.map(i => '• ' + i).join('<br>');
+            }
+        };
+
+        window.gameCommand = function(cmd, arg) {
+            if (window.rubyRunCommand) {
+                window.rubyRunCommand(cmd, arg);
+            }
+        };
+
+        window.signalReady = function() {
+            document.getElementById('loading').style.display = 'none';
+        };
+    </script>
+
+    <script type="text/ruby">
+        require 'js'
+
+        class BrowserBridge
+            def self.update_scene(dungeon)
+                room = dungeon.find_room_in_dungeon(dungeon.player.location)
+                JS.global.updateScene(room.full_description)
+                
+                dirs = room.connections.keys.map(&:to_s).join(",")
+                JS.global.updateNavigation(dirs)
+                
+                items = room.items.map(&:name).join(",")
+                JS.global.updateRoomItems(items)
+
+                inv = dungeon.player.items.map(&:name).join(",")
+                JS.global.updateInventory(inv)
+            end
+
+            def self.feedback(text)
+                JS.global.updateFeedback(text.to_s)
+            end
+        end
+
+        class Room
+            attr_accessor :reference, :name, :unlocked, :description, :connections, :items
+            def initialize(reference, name, description, connections, items)
+                @reference = reference; @name = name; @unlocked = false
+                @description = description; @connections = connections; @items = items
+            end
+            def full_description
+                s = "<span class='room-name'>#{@name}</span>"
+                s += @description[@unlocked].to_s
+                if @items.any?
+                    s += "\n\n<span style='color: #c5a059; font-weight: bold;'>JE ZIET HIER: </span>" 
+                    s += @items.map(&:name).join(", ")
+                end
+                s
+            end
+        end
+
+        class Item
+            attr_accessor :name, :description
+            def initialize(name, description); @name = name; @description = description; end
+        end
+
+        class Dungeon
+            attr_accessor :player
+            def initialize(player_name)
+                @player = Player.new(player_name, self)
+                @rooms = []
+            end
+            def find_room_in_dungeon(ref); @rooms.detect { |r| r.reference == ref }; end
+            def add_room(ref, name, desc, conn, items); @rooms << Room.new(ref, name, desc, conn, items); end
+            
+            def start(location)
+                @player.location = location
+                build_world
+                BrowserBridge.update_scene(self)
+            end
+
+            private
+            def build_world
+                add_room(:meadow_road, "Weideweg", 
+                    {false => "Je bevindt je op een weg omringd door vredig uitziende weiden. Schapen en koeien grazen in het grasland en je kunt je bijna voorstellen dat de herder naar zijn hond fluit. Er is echter geen herder en met zoveel schapen komt dat vreemd op je over. \nHet is nog lang geen zonsondergang, maar als je naar de lucht kijkt, is er een lange rode streep zichtbaar aan de hemel. Een duister voorteken als je er ooit een hebt gezien."}, 
+                    {:zuid => :small_town, :noord => :enchanted_forest, :oost => :canyon}, [])
+                
+                add_room(:canyon, "Smalle Kloof", 
+                    {false => "Je staat bij de ingang van een lange kloof. De zon staat hoog aan de hemel en schijnt haar onverbiddelijke hitte op je neer.\nEen reusachtige arend blijft boven je cirkelen, alsof hij wacht tot de zon zijn werk doet. De rotsen en doornige struiken maken het navigeren door de kloof lastig. \nAls je om je heen kijkt, zie je een oude piramide die tegen de zijkant van de kloof is gebouwd. Na het beklimmen ervan vind je een groot vergrootglas dat stevig bovenop is geplaatst. Er zitten brandplekken omheen."}, 
+                    {:west => :meadow_road, :zuid => :hilly_country}, [Item.new("veer", "Een veer.")])
+                
+                add_room(:hilly_country, "Heuvelachtig Land", 
+                    {false => "Een lieflijk pad slingert voor je uit door bossen en over heuvels. Terwijl je verder loopt, schrik je wakker uit je dagdromen wanneer je veel voetsporen op het pad opmerkt. Het lijkt erop dat een grote groep mensen onlangs door dit gebied is getrokken. Helaas zijn de meeste voorwerpen nutteloos."}, 
+                    {:noord => :canyon, :west => :small_town}, [Item.new("sleutel", "Een enorme sleutel.")])
+                
+                add_room(:small_town, "Klein Stadje", 
+                    {false => "Je staat voor de ingang van een klein stadje. Het bord bij de ingang zegt 'sta verenigd tegen het rijk'. Pop:206, het zegt eronder, maar kleinere getallen zijn een paar keer doorgestreept. Nu ziet het eruit als een spookstad. In het midden is een prachtige fontein. Je spot een enorm landhuis, maar het zit op slot.", 
+                     true => "Je staat voor de ruïnes van het dorpje waar je kort daarvoor langs kwam. De dorpelingen hadden gelijk om het te verlaten. Je ziet het landhuis nog steeds staan."}, 
+                    {:noord => :meadow_road, :oost => :hilly_country}, [])
+                
+                add_room(:enchanted_forest, "Betoverd Bos", 
+                    {false => "Je komt aan bij een vreemd cirkelvormig bos van de elfen. Bij de rand zie je een prachtige boog. Verderop vind je de overblijfselen van een occult ritueel. Sommige elfen hebben hun toevlucht gezocht in sterke drank.", 
+                     true => "Als je opnieuw het betoverde bos binnengaat, voelt het nu veel donkerder aan. Geen elfen meer, alleen verlaten boomhutten en een massagraf."}, 
+                    {:zuid => :meadow_road, :noord => :entrance_cave}, [Item.new("drinkzak", "Een drinkzak.")])
+                
+                add_room(:entrance_cave, "Ingang van een Grot", 
+                    {false => "Je ziet een grot in de verte. Te donker om iets te zien. Had je maar wat licht.", 
+                     true => "Gelukkig verlicht je fakkel de weg."}, 
+                    {:zuid => :enchanted_forest}, [])
+            end
+        end
+
+        class Player
+            attr_accessor :name, :location, :items, :dungeon
+            def initialize(name, dungeon); @name = name; @dungeon = dungeon; @items = []; end
+            
+            def go(direction)
+                current_room = @dungeon.find_room_in_dungeon(@location)
+                if current_room.connections[direction]
+                    # Logic for dynamic descriptions (unlocked status)
+                    if @location == :small_town then current_room.unlocked = true end
+                    if @location == :enchanted_forest then current_room.unlocked = true end
+                    
+                    @location = current_room.connections[direction]
+                    
+                    BrowserBridge.feedback("Je gaat naar het #{direction}...")
+                    BrowserBridge.update_scene(@dungeon)
+                end
+            end
+            
+            def take(item_name)
+                room = @dungeon.find_room_in_dungeon(@location)
+                item = room.items.find { |i| i.name == item_name }
+                if item
+                    @items << item
+                    room.items.delete(item)
+                    BrowserBridge.feedback("Je pakt de #{item_name}.")
+                    BrowserBridge.update_scene(@dungeon)
+                end
+            end
+        end
+
+        $dungeon = Dungeon.new("Explorer")
+        $dungeon.start(:meadow_road)
+
+        JS.global[:rubyRunCommand] = ->(cmd, arg) { 
+            c = cmd.to_s; a = arg.to_s
+            if c == "ga" then $dungeon.player.go(a.to_sym) end
+            if c == "pak" then $dungeon.player.take(a) end
+        }
+        
+        JS.global.signalReady
+    </script>
+</body>
+</html>
