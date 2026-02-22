@@ -23,6 +23,14 @@ class Dungeon
 		@rooms.detect { |room| room.reference == reference}
 	end
 
+	def add_room(reference, name, description, connections, items)
+		@rooms << Room.new(reference, name, description, connections, items)
+	end
+
+	def unlock_room()
+		find_room_in_dungeon(@player.location).unlocked = true
+	end
+
 	private
 
 	def build_world
@@ -98,7 +106,7 @@ class Dungeon
 			[])	
 		add_room(:tundra_west, 
 			"Tundra", 
-			{false => "An hour ago you spotted a lone horseman behind you on the horizon. Horsemen are known to travel and hunt in packs, so you're sure there must be more. You might have scared them off, but horsemen are hardly cowards and spotting you might have put ideas of revenge in their heads. Your orders did not involve the horsemen and the more prudent thing to do was avoid them. As you contemplate your next move you spot a dust cloud behind you. It seems the choice was taken from you. The land does not give much opportunity for hiding. Fortunately if you increase your tempo now, it will be nightfall when they overtake you. Calmly you fall in to an easy run. \nAs you run, you think over your options. The horsemen are stubborn and will most likely not relent. They will disperse during the night and weave a large net in which they hope to catch you. As dusk sets in you no longer see a dust cloud behind you. Either they relented or did as you predicted. After a while you find yourself in a more adventageous landscape. A labyrinth of tall rocks that reach above your head. Your ears catch the muffled sound of a horse with cloth tied around its feet. Another favorite trick of the horsemen. Luckily your ears are sharper than average men's and as you hide in a small crevace a lone rider passes you by. Silently you move up to him from behind. If the rider spots you he will whistle loudly, whereby calling the rest of the pack down on you. You cross the last couple of meters in a dash. The rider turns around in alarm, but you jump on top of the horse and take the rider out before he can call his friends. With another quick move you silence the horse. Quickly you look through the riders bags. Nothing remarkable except a set of middle-long, blunt blades. \nRethinking what to do now, you turn around and head back. The horsemens' net now has a hole and you intend to slip through it. The rest of the night you spend running back in the direction you came from. Come morning you find no trace of horsemen.", true => "You find no trace of the horsemen this time and with an infallable memory you backtrack to the place you ambushed the horsemen. No trace of him to be found anymore, so his comrades must have found him. You find the blunt blades still where you buried them."}, 
+			{false => "An hour ago you spotted a lone horseman behind you on the horizon. Horsemen are known to travel and hunt in packs, so you're sure there must be more. You might have scared them off, but horsemen are hardly cowards and spotting you might have put ideas of revenge in their heads. Your orders did not involve the horsemen and the more prudent thing to do was avoid them. As you contemplate your next move you spot a dust cloud behind you. It seems the choice was taken from you. The land does not give much opportunity for hiding. Fortunately if you increase your tempo now, it will be nightfall when they overtake you. Calmly you fall in to an easy run. \nAs you run, you think over your options. The horsemen are stubborn and will most likely not relent. They will disperse during the night and weave a large net in which they hope to catch you. As dusk sets in you no longer see a dust cloud behind you. Either they relented or did as you predicted. After a while you find yourself in a more adventageous landscape. A labyrinth of tall rocks that reach above your head. Your ears catch the muffled sound of a horse with cloth tied around its feet. Another favorite trick of the horsemen. Luckily your ears are sharper than average men's and as you hide in a small crevace a lone rider passes you by. Silently you move up to him from behind. If the rider spots you he will whistle loudly, whereby calling the rest of the pack down on you. You cross the last couple of meters in a dash. The rider turns around in alarm, but you jump on top of the horse and take the rider out before he can call his friends. With another quick move you silence the horse. Quickly you look through the riders bags. Nothing remarkable except a set of middle-long, blunt blades. \nRethinking what to do now, you turn around and head back. The horsemens' net now has a hole and you intend to slip through it. The rest of the night you spend running back in the direction you came from. Come morning you find ..."}, 
 			{:east => :tundra},
 			[Item.new("blunt-blades", "\nNot much use in current form. Though you think most weapons are useless. These particular ones might be reworked to your use.")])	
 		add_room(:forest, 
@@ -138,7 +146,7 @@ class Dungeon
 			[])
 		add_room(:mountain_pass, 
 			"The Eastern Mountain Pass", 
-			{false => "Carefully you crouch beside one of the last trees before the large and open plain of the pass. You see six of them circling directly above you, which probably means they've spotted you. Griphons are not known for their intelligence, but they are pack animals and their instincts for hunting are excellent. Being in the air means they have the advantage of choosing the battleground, which will probably be out in the open where they can come from all sides. You prefer to have the initiative though and even though you feel confident, you decide to wait till darkness sets in. Griphons's nightsight is equal to your own, but the night is dark tonight and they will need to fly low or risk losing you. \n\nYou slowly walk out the forest and look up. The sliver of the moon is invisible behind thick dark clouds. The effect is somewhat diminished by the whiteness of the snow, brightening the night. It will have to do. Non of the beasts nearby as far as you can make out though. Carefully you set out. \n\nWhen you hear the screech hours later, you almost thought you had gotten rid of them. You crouch down and look up towards the sound. Three of them are flying low about 50 meters from your right. They fly parralel to you and are not preparing to attack. That doesn't make sense. Why alert you and give time to ... You get hit sideways by some large weigth. Instinctively you crouch and try to lower your point of gravity but your reaction was late and you find yourself falling sideways. As you do so however, you wip around your tail and are rewarded by solid contact and a pained screech. You manage to grab hold and are pulled up by the griphon trying to get away. The two others that were right behind, suddenly like their situation much less and try to change their collision course. Using the momentum gained by your tail action, you swing your body towards the closest of the two trailing and manage to make a solid connection with one of its wings. Screeching and whimpering it goes down. You whip yourself up towards the griphon you're 'riding' and finish it off by swinging your talon and seperating its head from body. Quickly you manage to turn around mid air as you fall down and land on your four feet. You look around and see the griphon who you managed to collide with, try to limp away. You're tempted to finish it off, but you don't know where the others are and in a quick movement you circle around. The three diversions had used the time to approach from the right, while the third initial attacker had joined them. They look more uncertain now and start circling around you. The wounded one on the ground screeches out to them and with more confidence in their flight, they move out to protect it. That must be the leader than. You feel a pang of regret you didn't take him out when you had the chance, but repress it. You made the sensible move as it would have left you open for attack. Slowly you start to circle around the leader and re-evaluate the situation. You realize this fight is over. Griphons without the leader of the pack have little appetite for danger. As you've shown them you can handle six they won't come back with four. Especially with their leader incapacitated and grounded. You are not the one that needs to finish this fight. Moving backwards and out of sight you hear a last angry screech as they realize the same. \n\nMoving quickly through the night you leave the mountain pass - and the griphons - behind you."}, 
+			{false => "Carefully you crouch beside one of the last trees before the large and open plain of the pass. You see six of them circling directly above you, which probably means they've spotted you. Griphons are not known for their intelligence, but they are pack animals and their instincts for hunting are excellent. Being in the air means they have the advantage of choosing the battleground, which will probably be out in the open where they can come from all sides. You prefer to have the initiative though and even though you feel confident, you decide to wait till darkness sets in. Griphons's nightsight is equal to your own, but the night is dark tonight and they will need to fly low or risk losing you. \n\nYou slowly walk out the forest and look up. The sliver of the moon is invisible behind thick dark clouds. The effect is somewhat diminished by the whiteness of the snow, brightening the night. It will have to do. Non of the beasts nearby as far as you can make out though. Carefully you set out. \n\nWhen you hear the screech hours later, you almost thought you had gotten rid of them. You crouch down and look up towards the sound. Three of them are flying low about 50 meters from your right. They fly parralel to you and are not preparing to attack. That doesn't make sense. Why alert you and give time to ... You get hit sideways by some large weigth. Instinctively you crouch and try to lower your point of gravity but your reaction was late and you find yourself falling sideways. As you do so however, you wip around your tail and are rewarded by solid contact and a pained screech. You manage to grab hold and are pulled up by the griphon trying to get away. The two others that were right behind, suddenly like their situation much less and try to change their collision course. Using the momentum gained by your tail action, you swing your body towards the closest of the two trailing and manage to make a solid connection with one of its wings. Screeching and whimpering..."}, 
 			{:west => :home},
 			[])
 		add_room(:canyon_topside, 
@@ -157,12 +165,6 @@ class Dungeon
 			{:north => :start_mountain_pass},
 			[])
 	end	
-	def add_room(reference, name, description, connections, items)
-		@rooms << Room.new(reference, name, description, connections, items)
-	end
-	def unlock_room()
-		find_room_in_dungeon(@player.location).unlocked = true
-	end
 end
 
 class Player
@@ -185,9 +187,14 @@ class Player
 			if @dungeon.find_room_in_dungeon(@location).reference == :south_east_desert then @dungeon.find_room_in_dungeon(@location).unlocked = true end
 
 			#change current @location to the new direction. 
-			puts "\nYou go " + direction.to_s
-			@location = @dungeon.find_room_in_dungeon(@location).connections[direction]
-			@dungeon.show_current_description
+			new_location_ref = @dungeon.find_room_in_dungeon(@location).connections[direction]
+			if @dungeon.find_room_in_dungeon(new_location_ref)
+				puts "\nYou go " + direction.to_s
+				@location = new_location_ref
+				@dungeon.show_current_description
+			else
+				puts "\nOops, that room doesn't seem to exist in the world structure!"
+			end
 		else
 			puts "\nIt does not appear to be possible to move there. Choose another direction."
 		end
@@ -216,7 +223,7 @@ class Player
 				puts "\nYou look at it and try to to think of a use for it in your current situation. The task is beyond you. You put it back."
 			when "eagle-egg"
 				puts "\nYou quickly eat your last egg. It fills your stomach and leaves you drowsy but fulfilled."
-				items.delete_if {|i| i.name == "Eagle-egg"}
+				items.delete_if {|i| i.name == "eagle-egg"}
 			when "feather"
 				puts "\nYou scratch yourself beneath your feet with the pointy side and enjoy a momentary relief of an incessant itch."
 			when "drinking-bag"
@@ -269,7 +276,7 @@ class Player
 			when "driftwood"
 				if @dungeon.find_room_in_dungeon(@location).reference == :riverland
 					puts "What item do you want to combine this with?"
-					if gets.chomp.split(' ').any? {|i| i == "rope"} and !items.select {|i| i.name == "rope"}.empty?
+					if $stdin.gets.chomp.split(' ').any? {|i| i == "rope"} and !items.select {|i| i.name == "rope"}.empty?
 						@dungeon.find_room_in_dungeon(@location).add_connection([:south, :farmland])
 						@dungeon.find_room_in_dungeon(@location).unlocked = true
 						items.delete_if {|i| i.name == "driftwood"}
@@ -288,7 +295,7 @@ class Player
 			when "rope"
 				if @dungeon.find_room_in_dungeon(@location).reference == :riverland
 					puts "What item do you want to combine this with?"
-					player_answer = gets.chomp.to_s
+					player_answer = $stdin.gets.chomp
 					if player_answer.split(' ').any? {|i| i == "driftwood"} and !items.select {|i| i.name == "driftwood"}.empty?
 						@dungeon.find_room_in_dungeon(@location).add_connection([:south, :farmland])
 						@dungeon.find_room_in_dungeon(@location).unlocked = true
@@ -427,7 +434,7 @@ end
 class Gamestorage
 
 	def initialize(player_name)
-		Dir.mkdir "savegames" unless Dir.exists? "savegames"
+		Dir.mkdir "savegames" unless Dir.exist? "savegames"
 		plyrname = player_name.chomp.gsub(/^.*(\\|\/)/, '').gsub(/[^0-9A-Za-z.\-]/, '_').downcase #sanitize for saving.
 		@path = "savegames/#{plyrname}"
 	end
@@ -440,21 +447,25 @@ class Gamestorage
 	end
 
 	def load_game
-		f = File.open(@path).readlines.join()
-		YAML::load(f)
+		f = File.read(@path)
+		if YAML.respond_to?(:unsafe_load)
+			YAML.unsafe_load(f)
+		else
+			YAML.load(f)
+		end
 	end
 
-	def save_exists?
-		File.exists? @path
+	def save_exist?
+		File.exist? @path
 	end
 end
 
 puts "Game will automatically resume if you've played before. (based on your name)"
 puts "What is your name?"
-player = gets.chomp
+player = $stdin.gets.chomp
 storage = Gamestorage.new(player)
 
-if storage.save_exists?
+if storage.save_exist?
 	#load from previous game
 	d = storage.load_game
 	d.show_current_description
@@ -467,21 +478,24 @@ end
 puts " "
 puts "Choose an action. \nType actions, to get a hint for possible actions you can take."
 puts "------------------------"
-input = gets.chomp.to_s.split(' ')
+input = $stdin.gets.chomp.split(' ')
 while !(input[0] == "exit") #or !(d.find_room_in_dungeon(d.player.location).reference == :home)
-	case input.shift #take of first element of input for input in case. input array now no longer has first word.
+	command = input.shift
+	next if command.nil? || command.empty?
+
+	case command #take of first element of input for input in case. input array now no longer has first word.
 	when "directions"
 		d.player.directions
 	when "sack"
 		d.player.which_item_in_backpack
 	when "go"
-		d.player.go(input.join.to_sym)
+		d.player.go(input.join(' ').to_sym)
 	when "take"
-		d.player.take(input.join)
+		d.player.take(input.join(' '))
 	when "use"
 		d.player.use(input.join(' '))
 	when "inspect"
-		d.player.inspect_item(input.join)
+		d.player.inspect_item(input.join(' '))
 	when "actions"
 		d.player.possible_actions
 	else
@@ -490,7 +504,7 @@ while !(input[0] == "exit") #or !(d.find_room_in_dungeon(d.player.location).refe
 	
 	if !(d.find_room_in_dungeon(d.player.location).reference == :home) #as long as you're not at the end of the game ask for input again.
 		puts "------------------------"
-		input = gets.chomp.to_s.split(' ')
+		input = $stdin.gets.chomp.split(' ')
 	else
 		input[0] = "exit"
 	end
