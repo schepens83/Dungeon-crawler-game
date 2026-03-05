@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dungeon Crawler - Explorer</title>
-    <script src="https://cdn.jsdelivr.net/npm/@ruby/3.3-wasm-wasi@2.6.2/dist/browser.script.iife.js"></script>
     <style>
         :root {
             --bg-color: #0a0a0a;
@@ -14,63 +13,77 @@
             --border-color: #333;
             --highlight-color: #c5a059;
         }
-        
-        body { 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
-            font-family: "Georgia", serif; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            height: 100vh; 
-            overflow: hidden; 
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: "Georgia", serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
-        
-        #scene-visualization { 
-            flex: 0 0 30%; 
-            background: linear-gradient(to bottom, #000, #161616); 
-            border-bottom: 2px solid var(--accent-color); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            position: relative; 
+
+        #scene-visualization {
+            flex: 0 0 55%;
+            background: #000;
+            border-bottom: 2px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
-        
-        #scene-visualization::after { 
-            content: "VISUALIZING SCENE..."; 
-            font-size: 0.7rem; 
-            letter-spacing: 0.3rem; 
-            color: #333; 
-            animation: pulse 3s infinite; 
+
+        #scene-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: none;
+            animation: fadeIn 0.8s ease-in-out;
         }
-        
+
+        #scene-image.loaded { display: block; }
+
+        #scene-placeholder {
+            font-size: 0.7rem;
+            letter-spacing: 0.3rem;
+            color: #333;
+            animation: pulse 3s infinite;
+            position: absolute;
+        }
+
+        #scene-image.loaded + #scene-placeholder { display: none; }
+
         @keyframes pulse { 0% { opacity: 0.2; } 50% { opacity: 0.5; } 100% { opacity: 0.2; } }
-        
-        #narrative-container { 
-            flex: 1; 
-            padding: 30px; 
-            overflow-y: auto; 
-            background-image: radial-gradient(circle at center, #161616 0%, #0a0a0a 100%); 
-            scrollbar-width: thin; 
+
+        #narrative-container {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background-image: radial-gradient(circle at center, #161616 0%, #0a0a0a 100%);
+            scrollbar-width: thin;
             scrollbar-color: var(--accent-color) var(--bg-color);
             display: flex;
             flex-direction: column;
         }
-        
-        .scene-content { 
+
+        .scene-content {
             max-width: 800px;
             margin: 0 auto;
-            line-height: 1.7; 
-            animation: fadeIn 0.6s ease-in-out; 
-            padding-bottom: 40px; /* Zorg dat tekst onderaan niet tegen de rand zit */
+            line-height: 1.7;
+            animation: fadeIn 0.6s ease-in-out;
+            padding-bottom: 40px;
         }
-        
-        .room-name { 
-            font-size: 1.6rem; 
-            color: var(--highlight-color); 
-            margin-bottom: 1.5rem; 
-            border-bottom: 1px solid var(--accent-color); 
-            display: block; 
+
+        .room-name {
+            font-size: 1.6rem;
+            color: var(--highlight-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--accent-color);
+            display: block;
             padding-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -85,65 +98,116 @@
             font-size: 0.9rem;
             min-height: 1.2rem;
         }
-        
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        #action-panel { 
-            background-color: var(--panel-color); 
-            padding: 15px; 
-            display: grid; 
-            grid-template-columns: 1fr 1.5fr 1fr; 
-            gap: 15px; 
-            height: 170px; 
+
+        #action-panel {
+            background-color: var(--panel-color);
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 15px;
+            height: 170px;
             border-top: 2px solid var(--accent-color);
             box-sizing: border-box;
             z-index: 10;
         }
-        
+
         .action-group { display: flex; flex-direction: column; gap: 8px; justify-content: flex-start; }
-        
-        button { 
-            background-color: #111; 
-            border: 1px solid var(--border-color); 
-            color: var(--text-color); 
-            padding: 10px; 
-            cursor: pointer; 
-            transition: all 0.2s; 
-            font-family: inherit; 
-            text-transform: uppercase; 
-            font-size: 0.65rem; 
-            letter-spacing: 1px; 
+
+        button {
+            background-color: #111;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            text-transform: uppercase;
+            font-size: 0.65rem;
+            letter-spacing: 1px;
         }
-        
-        button:hover:not(:disabled) { 
-            background-color: var(--accent-color); 
-            border-color: var(--highlight-color); 
-            color: white; 
+
+        button:hover:not(:disabled) {
+            background-color: var(--accent-color);
+            border-color: var(--highlight-color);
+            color: white;
         }
-        
+
         button:disabled { opacity: 0.05; cursor: not-allowed; border-color: #222; }
-        
+
         #nav-grid { display: grid; grid-template-columns: repeat(3, 42px); grid-template-rows: repeat(2, 42px); gap: 8px; width: fit-content; margin: 0 auto; }
         .btn-north { grid-column: 2; }
         .btn-west { grid-column: 1; grid-row: 2; }
         .btn-south { grid-column: 2; grid-row: 2; }
         .btn-east { grid-column: 3; grid-row: 2; }
-        
+
         #inventory-list { font-size: 0.75rem; height: 90px; overflow-y: auto; border: 1px solid #222; padding: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; color: #888; }
-        
+
+        .inv-item { display: flex; gap: 4px; align-items: center; margin-bottom: 3px; }
+        .inv-item-name { flex: 1; }
+        .inv-btn { padding: 2px 6px; font-size: 0.55rem; min-width: 0; }
+
         .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: black; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
         .spinner { width: 40px; height: 40px; border: 2px solid #111; border-top: 2px solid var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #lang-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: black; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 1001; gap: 20px;
+        }
+        #lang-overlay h1 { color: var(--highlight-color); font-size: 1.8rem; letter-spacing: 4px; margin-bottom: 20px; }
+        .lang-btn { padding: 15px 40px; font-size: 1rem; letter-spacing: 2px; min-width: 200px; }
+
+        #name-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: black; display: none; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 1001; gap: 15px;
+        }
+        #name-overlay label { color: var(--highlight-color); font-size: 1rem; letter-spacing: 2px; }
+        #name-input { background: #111; border: 1px solid var(--border-color); color: var(--text-color); padding: 10px 20px; font-family: inherit; font-size: 1rem; text-align: center; width: 250px; }
+        #name-input:focus { outline: none; border-color: var(--highlight-color); }
+
+        #combine-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85); display: none; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 1001; gap: 10px;
+        }
+        #combine-overlay p { color: var(--highlight-color); font-size: 0.9rem; letter-spacing: 1px; }
+        #combine-items { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        #combine-items button { padding: 10px 20px; }
     </style>
 </head>
 <body>
 
-    <div id="loading" class="loading-overlay">
+    <div id="lang-overlay">
+        <h1>DUNGEON CRAWLER</h1>
+        <button class="lang-btn" onclick="startWithLang('en')">ENGLISH</button>
+        <button class="lang-btn" onclick="startWithLang('nl')">NEDERLANDS</button>
+    </div>
+
+    <div id="name-overlay">
+        <label id="name-label">What is your name?</label>
+        <input type="text" id="name-input" autofocus>
+        <button onclick="submitName()" id="name-btn">START</button>
+    </div>
+
+    <div id="combine-overlay">
+        <p id="combine-prompt"></p>
+        <div id="combine-items"></div>
+        <button onclick="cancelCombine()" style="margin-top:10px;font-size:0.6rem;padding:8px 16px;">CANCEL</button>
+    </div>
+
+    <div id="loading" class="loading-overlay" style="display:none;">
         <div class="spinner"></div>
         <p style="margin-top: 25px; letter-spacing: 3px; color: #444; font-size: 0.6rem;">INITIALIZING DUNGEON...</p>
     </div>
 
-    <div id="scene-visualization"></div>
+    <div id="scene-visualization">
+        <img id="scene-image" alt="Scene">
+        <span id="scene-placeholder">VISUALIZING SCENE...</span>
+    </div>
 
     <div id="narrative-container">
         <div id="action-feedback" class="action-feedback"></div>
@@ -152,210 +216,550 @@
 
     <div id="action-panel">
         <div class="action-group">
-            <div style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">NAVIGATIE</div>
+            <div id="nav-label" style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">NAVIGATION</div>
             <div id="nav-grid">
-                <button class="btn-north" onclick="window.gameCommand('ga', 'noord')" id="btn-noord" disabled>N</button>
-                <button class="btn-west" onclick="window.gameCommand('ga', 'west')" id="btn-west" disabled>W</button>
-                <button class="btn-south" onclick="window.gameCommand('ga', 'zuid')" id="btn-zuid" disabled>Z</button>
-                <button class="btn-east" onclick="window.gameCommand('ga', 'oost')" id="btn-oost" disabled>O</button>
+                <button class="btn-north" id="btn-north" disabled>N</button>
+                <button class="btn-west" id="btn-west" disabled>W</button>
+                <button class="btn-south" id="btn-south" disabled>S</button>
+                <button class="btn-east" id="btn-east" disabled>E</button>
             </div>
         </div>
 
         <div class="action-group">
-            <div style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">INTERACTIE</div>
+            <div id="interaction-label" style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">INTERACTION</div>
             <div id="dynamic-actions" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 5px;"></div>
         </div>
 
         <div class="action-group">
-            <div style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">RUGZAK</div>
-            <div id="inventory-list">Je zak is leeg.</div>
+            <div id="backpack-label" style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">BACKPACK</div>
+            <div id="inventory-list"></div>
         </div>
     </div>
 
     <script>
-        window.updateFeedback = function(text) {
-            document.getElementById('action-feedback').innerHTML = text ? text.split('\n').join('<br>') : '';
-        };
+    // ====== ROOM IMAGE MAPPING ======
+    const ROOM_IMAGES = {
+        meadow_road:        { locked: "images/weideweg.png" },
+        canyon:             { locked: "images/smalle_kloof.png" },
+        small_town:         { locked: "images/klein_stadje.png", unlocked: "images/klein_stadje-2.png" },
+        enchanted_forest:   { locked: "images/betoverd_bos.png", unlocked: "images/betoverd_bos-2.png" },
+        entrance_cave:      { locked: "images/ingang_grot.png", unlocked: "images/ingang_grot-2.png" },
+        cave_tunnel:        { locked: "images/grottunnel.png" },
+        start_desert:       { locked: "images/woestijn_start.png", unlocked: "images/woestijn_start-2.png" },
+        east_desert:        { locked: "images/woestijn_oost.png" },
+        north_east_desert:  { locked: "images/woestijn_droom.png" },
+        north_desert:       { locked: "images/woestijn_oase.png" },
+        south_east_desert:  { locked: "images/woestijn_geraamte.png" },
+        south_desert:       { locked: "images/woestijn_karavaan.png" },
+        tundra:             { locked: "images/toendra.png" },
+        tundra_west:        { locked: "images/toendra_hinderlaag.png" },
+        forest:             { locked: "images/bos_gehangene.png" },
+        riverland:          { locked: "images/rivier_onbegaanbaar.png", unlocked: "images/rivier_vlot.png" },
+        river_to_mountain:  { locked: "images/rivier_bergkant.png" },
+        ocean:              { locked: "images/rivier_strand.png" },
+        farmland:           { locked: "images/maisvelden.png" },
+        mountain:           { locked: "images/mountain.png" },
+        start_mountain_pass:{ locked: "images/bergpas_ingang.png", unlocked: "images/bergpas_ingang-2.png" },
+        mountain_pass:      { locked: "images/bergpas_gevecht.png" },
+        canyon_topside:     { locked: "images/canyon_bovenkant.png" },
+        smithy:             { locked: "images/smederij.png" },
+        home:               { locked: "images/drakenhol_thuis.png" },
+        hilly_country:      { locked: "images/heuvelachtig_land.png" },
+    };
 
-        window.updateScene = function(text) {
-            document.getElementById('scene-text').innerHTML = text.split('\n').join('<br>');
-            document.getElementById('narrative-container').scrollTop = 0;
-        };
+    // ====== GAME STATE ======
+    let STORY = null;
+    let LANG = 'en';
+    let DIRECTION_MAP = {};
+    let COMMAND_MAP = {};
+    let ITEM_NAME_MAP = {};
+    let ITEM_DISPLAY_MAP = {};
+    let playerName = '';
+    let currentRoom = 'meadow_road';
+    let inventory = []; // [{name, description, used}]
+    let rooms = {};     // ref -> {name, descriptions:{locked,unlocked}, connections:{}, items:[], unlocked:bool}
+    let combineCallback = null;
 
-        window.updateNavigation = function(dirString) {
-            const directions = dirString ? dirString.split(',') : [];
-            ['noord', 'zuid', 'oost', 'west'].forEach(dir => {
-                const btn = document.getElementById('btn-' + dir);
-                if (btn) btn.disabled = !directions.includes(dir);
-            });
-        };
+    // ====== LABELS ======
+    const LABELS = {
+        en: { nav: 'NAVIGATION', interact: 'INTERACTION', backpack: 'BACKPACK', empty: 'Your sack is empty.', take: 'TAKE', use: 'USE', inspect: 'INSPECT', n: 'N', s: 'S', e: 'E', w: 'W', youSee: 'YOU FIND HERE: ', goMsg: dir => 'You go ' + dir + '...', takMsg: name => 'You put the ' + name + ' in your sack.' },
+        nl: { nav: 'NAVIGATIE', interact: 'INTERACTIE', backpack: 'RUGZAK', empty: 'Je zak is leeg.', take: 'PAK', use: 'GEBRUIK', inspect: 'BEKIJK', n: 'N', s: 'Z', e: 'O', w: 'W', youSee: 'JE VINDT HIER: ', goMsg: dir => 'Je gaat naar het ' + dir + '...', takMsg: name => 'Je stopt de ' + name + ' in je zak.' }
+    };
 
-        window.updateRoomItems = function(itemsString) {
-            const items = itemsString ? itemsString.split(',') : [];
-            const container = document.getElementById('dynamic-actions');
-            container.innerHTML = '';
-            items.forEach(item => {
-                if (!item) return;
-                const btn = document.createElement('button');
-                btn.textContent = 'PAK ' + item;
-                btn.onclick = () => window.gameCommand('pak', item);
-                btn.style.borderColor = 'var(--highlight-color)';
-                container.appendChild(btn);
-            });
-        };
+    function L(key) { return LABELS[LANG][key]; }
 
-        window.updateInventory = function(itemsString) {
-            const items = itemsString ? itemsString.split(',') : [];
-            const list = document.getElementById('inventory-list');
-            if (!itemsString || items.length === 0 || (items.length === 1 && items[0] === "")) {
-                list.textContent = 'Je zak is leeg.';
-            } else {
-                list.innerHTML = items.map(i => '• ' + i).join('<br>');
-            }
-        };
+    // ====== DIRECTION HELPERS ======
+    // Internal directions are always the keys used in connections (EN: north/south/east/west, NL: noord/zuid/oost/west)
+    // For buttons we map to cardinal: north/south/east/west internally
+    const CARDINAL = ['north','south','east','west'];
+    const CARDINAL_NL = ['noord','zuid','oost','west'];
 
-        window.gameCommand = function(cmd, arg) {
-            if (window.rubyRunCommand) {
-                window.rubyRunCommand(cmd, arg);
-            }
-        };
-
-        window.signalReady = function() {
-            document.getElementById('loading').style.display = 'none';
-        };
-    </script>
-
-    <script type="text/ruby">
-        require 'js'
-
-        class BrowserBridge
-            def self.update_scene(dungeon)
-                room = dungeon.find_room_in_dungeon(dungeon.player.location)
-                JS.global.updateScene(room.full_description)
-                
-                dirs = room.connections.keys.map(&:to_s).join(",")
-                JS.global.updateNavigation(dirs)
-                
-                items = room.items.map(&:name).join(",")
-                JS.global.updateRoomItems(items)
-
-                inv = dungeon.player.items.map(&:name).join(",")
-                JS.global.updateInventory(inv)
-            end
-
-            def self.feedback(text)
-                JS.global.updateFeedback(text.to_s)
-            end
-        end
-
-        class Room
-            attr_accessor :reference, :name, :unlocked, :description, :connections, :items
-            def initialize(reference, name, description, connections, items)
-                @reference = reference; @name = name; @unlocked = false
-                @description = description; @connections = connections; @items = items
-            end
-            def full_description
-                s = "<span class='room-name'>#{@name}</span>"
-                s += @description[@unlocked].to_s
-                if @items.any?
-                    s += "\n\n<span style='color: #c5a059; font-weight: bold;'>JE ZIET HIER: </span>" 
-                    s += @items.map(&:name).join(", ")
-                end
-                s
-            end
-        end
-
-        class Item
-            attr_accessor :name, :description
-            def initialize(name, description); @name = name; @description = description; end
-        end
-
-        class Dungeon
-            attr_accessor :player
-            def initialize(player_name)
-                @player = Player.new(player_name, self)
-                @rooms = []
-            end
-            def find_room_in_dungeon(ref); @rooms.detect { |r| r.reference == ref }; end
-            def add_room(ref, name, desc, conn, items); @rooms << Room.new(ref, name, desc, conn, items); end
-            
-            def start(location)
-                @player.location = location
-                build_world
-                BrowserBridge.update_scene(self)
-            end
-
-            private
-            def build_world
-                add_room(:meadow_road, "Weideweg", 
-                    {false => "Je bevindt je op een weg omringd door vredig uitziende weiden. Schapen en koeien grazen in het grasland en je kunt je bijna voorstellen dat de herder naar zijn hond fluit. Er is echter geen herder en met zoveel schapen komt dat vreemd op je over. \nHet is nog lang geen zonsondergang, maar als je naar de lucht kijkt, is er een lange rode streep zichtbaar aan de hemel. Een duister voorteken als je er ooit een hebt gezien."}, 
-                    {:zuid => :small_town, :noord => :enchanted_forest, :oost => :canyon}, [])
-                
-                add_room(:canyon, "Smalle Kloof", 
-                    {false => "Je staat bij de ingang van een lange kloof. De zon staat hoog aan de hemel en schijnt haar onverbiddelijke hitte op je neer.\nEen reusachtige arend blijft boven je cirkelen, alsof hij wacht tot de zon zijn werk doet. De rotsen en doornige struiken maken het navigeren door de kloof lastig. \nAls je om je heen kijkt, zie je een oude piramide die tegen de zijkant van de kloof is gebouwd. Na het beklimmen ervan vind je een groot vergrootglas dat stevig bovenop is geplaatst. Er zitten brandplekken omheen."}, 
-                    {:west => :meadow_road, :zuid => :hilly_country}, [Item.new("veer", "Een veer.")])
-                
-                add_room(:hilly_country, "Heuvelachtig Land", 
-                    {false => "Een lieflijk pad slingert voor je uit door bossen en over heuvels. Terwijl je verder loopt, schrik je wakker uit je dagdromen wanneer je veel voetsporen op het pad opmerkt. Het lijkt erop dat een grote groep mensen onlangs door dit gebied is getrokken. Helaas zijn de meeste voorwerpen nutteloos."}, 
-                    {:noord => :canyon, :west => :small_town}, [Item.new("sleutel", "Een enorme sleutel.")])
-                
-                add_room(:small_town, "Klein Stadje", 
-                    {false => "Je staat voor de ingang van een klein stadje. Het bord bij de ingang zegt 'sta verenigd tegen het rijk'. Pop:206, het zegt eronder, maar kleinere getallen zijn een paar keer doorgestreept. Nu ziet het eruit als een spookstad. In het midden is een prachtige fontein. Je spot een enorm landhuis, maar het zit op slot.", 
-                     true => "Je staat voor de ruïnes van het dorpje waar je kort daarvoor langs kwam. De dorpelingen hadden gelijk om het te verlaten. Je ziet het landhuis nog steeds staan."}, 
-                    {:noord => :meadow_road, :oost => :hilly_country}, [])
-                
-                add_room(:enchanted_forest, "Betoverd Bos", 
-                    {false => "Je komt aan bij een vreemd cirkelvormig bos van de elfen. Bij de rand zie je een prachtige boog. Verderop vind je de overblijfselen van een occult ritueel. Sommige elfen hebben hun toevlucht gezocht in sterke drank.", 
-                     true => "Als je opnieuw het betoverde bos binnengaat, voelt het nu veel donkerder aan. Geen elfen meer, alleen verlaten boomhutten en een massagraf."}, 
-                    {:zuid => :meadow_road, :noord => :entrance_cave}, [Item.new("drinkzak", "Een drinkzak.")])
-                
-                add_room(:entrance_cave, "Ingang van een Grot", 
-                    {false => "Je ziet een grot in de verte. Te donker om iets te zien. Had je maar wat licht.", 
-                     true => "Gelukkig verlicht je fakkel de weg."}, 
-                    {:zuid => :enchanted_forest}, [])
-            end
-        end
-
-        class Player
-            attr_accessor :name, :location, :items, :dungeon
-            def initialize(name, dungeon); @name = name; @dungeon = dungeon; @items = []; end
-            
-            def go(direction)
-                current_room = @dungeon.find_room_in_dungeon(@location)
-                if current_room.connections[direction]
-                    # Logic for dynamic descriptions (unlocked status)
-                    if @location == :small_town then current_room.unlocked = true end
-                    if @location == :enchanted_forest then current_room.unlocked = true end
-                    
-                    @location = current_room.connections[direction]
-                    
-                    BrowserBridge.feedback("Je gaat naar het #{direction}...")
-                    BrowserBridge.update_scene(@dungeon)
-                end
-            end
-            
-            def take(item_name)
-                room = @dungeon.find_room_in_dungeon(@location)
-                item = room.items.find { |i| i.name == item_name }
-                if item
-                    @items << item
-                    room.items.delete(item)
-                    BrowserBridge.feedback("Je pakt de #{item_name}.")
-                    BrowserBridge.update_scene(@dungeon)
-                end
-            end
-        end
-
-        $dungeon = Dungeon.new("Explorer")
-        $dungeon.start(:meadow_road)
-
-        JS.global[:rubyRunCommand] = ->(cmd, arg) { 
-            c = cmd.to_s; a = arg.to_s
-            if c == "ga" then $dungeon.player.go(a.to_sym) end
-            if c == "pak" then $dungeon.player.take(a) end
+    function dirButtons() {
+        // Returns array of {id, dir_key, label} for the 4 buttons
+        if (LANG === 'nl') {
+            return [
+                { id: 'btn-north', dir: 'noord', label: 'N' },
+                { id: 'btn-south', dir: 'zuid', label: 'Z' },
+                { id: 'btn-east', dir: 'oost', label: 'O' },
+                { id: 'btn-west', dir: 'west', label: 'W' },
+            ];
         }
-        
-        JS.global.signalReady
+        return [
+            { id: 'btn-north', dir: 'north', label: 'N' },
+            { id: 'btn-south', dir: 'south', label: 'S' },
+            { id: 'btn-east', dir: 'east', label: 'E' },
+            { id: 'btn-west', dir: 'west', label: 'W' },
+        ];
+    }
+
+    // ====== INIT ======
+    async function startWithLang(lang) {
+        LANG = lang;
+        document.getElementById('lang-overlay').style.display = 'none';
+        const file = lang === 'nl' ? 'verhaal.json' : 'story.json';
+        const res = await fetch(file);
+        STORY = await res.json();
+        DIRECTION_MAP = STORY.direction_map || {};
+        COMMAND_MAP = STORY.command_map || {};
+        ITEM_NAME_MAP = STORY.item_name_map || {};
+        // Build reverse map
+        ITEM_DISPLAY_MAP = {};
+        for (const [display, internal] of Object.entries(ITEM_NAME_MAP)) {
+            ITEM_DISPLAY_MAP[internal] = display;
+        }
+        // Show name prompt
+        document.getElementById('name-label').textContent = STORY.messages.name_prompt;
+        document.getElementById('name-overlay').style.display = 'flex';
+        document.getElementById('name-input').focus();
+        document.getElementById('name-input').addEventListener('keydown', e => {
+            if (e.key === 'Enter') submitName();
+        });
+    }
+
+    function submitName() {
+        const name = document.getElementById('name-input').value.trim();
+        if (!name) return;
+        playerName = name;
+        document.getElementById('name-overlay').style.display = 'none';
+        document.getElementById('loading').style.display = 'flex';
+        // Try to load saved game
+        const saveKey = 'dungeon_' + LANG + '_' + name.toLowerCase();
+        const saved = localStorage.getItem(saveKey);
+        if (saved) {
+            const state = JSON.parse(saved);
+            currentRoom = state.currentRoom;
+            inventory = state.inventory;
+            rooms = state.rooms;
+        } else {
+            buildWorld();
+        }
+        // Setup UI labels
+        setupLabels();
+        updateScene();
+        document.getElementById('loading').style.display = 'none';
+    }
+
+    function setupLabels() {
+        document.getElementById('nav-label').textContent = L('nav');
+        document.getElementById('interaction-label').textContent = L('interact');
+        document.getElementById('backpack-label').textContent = L('backpack');
+        // Direction button labels
+        const db = dirButtons();
+        for (const b of db) {
+            const el = document.getElementById(b.id);
+            el.textContent = b.label;
+        }
+    }
+
+    function buildWorld() {
+        rooms = {};
+        for (const [ref, data] of Object.entries(STORY.rooms)) {
+            rooms[ref] = {
+                name: data.name,
+                descriptions: { locked: data.descriptions.locked, unlocked: data.descriptions.unlocked },
+                connections: { ...data.connections },
+                items: data.items.map(i => ({ name: i.name, description: i.description, used: false })),
+                unlocked: false,
+            };
+        }
+        currentRoom = 'meadow_road';
+        inventory = [];
+    }
+
+    // ====== DISPLAY NAME HELPERS ======
+    function displayName(internalName) {
+        return ITEM_DISPLAY_MAP[internalName] || internalName;
+    }
+    function internalName(itemName) {
+        return ITEM_NAME_MAP[itemName] || itemName;
+    }
+
+    // ====== UI UPDATE ======
+    function updateScene() {
+        const room = rooms[currentRoom];
+        if (!room) return;
+
+        // Scene text
+        let desc = room.unlocked && room.descriptions.unlocked ? room.descriptions.unlocked : room.descriptions.locked;
+        let html = "<span class='room-name'>" + room.name + "</span>";
+        if (room.unlocked && room.descriptions.unlocked) html += "********<br>";
+        html += (desc || '').split('\n').join('<br>');
+        if (room.items.length > 0) {
+            html += "<br><br><span style='color: #c5a059; font-weight: bold;'>" + L('youSee') + "</span>";
+            html += room.items.map(i => i.name).join(', ');
+        }
+        document.getElementById('scene-text').innerHTML = html;
+        document.getElementById('narrative-container').scrollTop = 0;
+
+        // Image
+        const imgData = ROOM_IMAGES[currentRoom];
+        if (imgData) {
+            const src = (room.unlocked && imgData.unlocked) ? imgData.unlocked : imgData.locked;
+            updateSceneImage(src);
+        } else {
+            updateSceneImage(null);
+        }
+
+        // Navigation buttons
+        const db = dirButtons();
+        for (const b of db) {
+            const el = document.getElementById(b.id);
+            el.disabled = !(b.dir in room.connections);
+            el.onclick = () => gameGo(b.dir);
+        }
+
+        // Room items (take buttons)
+        const container = document.getElementById('dynamic-actions');
+        container.innerHTML = '';
+        for (const item of room.items) {
+            const btn = document.createElement('button');
+            btn.textContent = L('take') + ' ' + item.name;
+            btn.onclick = () => gameTake(item.name);
+            btn.style.borderColor = 'var(--highlight-color)';
+            container.appendChild(btn);
+        }
+
+        // Inventory
+        updateInventoryUI();
+
+        // Auto-save
+        saveGame();
+    }
+
+    function updateInventoryUI() {
+        const list = document.getElementById('inventory-list');
+        if (inventory.length === 0) {
+            list.textContent = L('empty');
+            return;
+        }
+        list.innerHTML = '';
+        for (const item of inventory) {
+            const div = document.createElement('div');
+            div.className = 'inv-item';
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'inv-item-name';
+            nameSpan.textContent = item.name;
+            div.appendChild(nameSpan);
+
+            const useBtn = document.createElement('button');
+            useBtn.className = 'inv-btn';
+            useBtn.textContent = L('use');
+            useBtn.onclick = () => gameUse(item.name);
+            div.appendChild(useBtn);
+
+            const inspBtn = document.createElement('button');
+            inspBtn.className = 'inv-btn';
+            inspBtn.textContent = L('inspect');
+            inspBtn.onclick = () => gameInspect(item.name);
+            div.appendChild(inspBtn);
+
+            list.appendChild(div);
+        }
+    }
+
+    function updateSceneImage(src) {
+        const img = document.getElementById('scene-image');
+        if (!src) { img.classList.remove('loaded'); return; }
+        img.classList.remove('loaded');
+        img.onload = () => img.classList.add('loaded');
+        img.onerror = () => img.classList.remove('loaded');
+        img.src = src;
+    }
+
+    function setFeedback(text) {
+        document.getElementById('action-feedback').innerHTML = text ? text.split('\n').join('<br>') : '';
+    }
+
+    // ====== SAVE / LOAD ======
+    function saveGame() {
+        const saveKey = 'dungeon_' + LANG + '_' + playerName.toLowerCase();
+        localStorage.setItem(saveKey, JSON.stringify({ currentRoom, inventory, rooms }));
+    }
+
+    // ====== GAME COMMANDS ======
+    function gameGo(direction) {
+        const room = rooms[currentRoom];
+        if (!(direction in room.connections)) {
+            setFeedback(STORY.messages.cant_go);
+            return;
+        }
+        // Mark rooms as unlocked when leaving
+        if (currentRoom === 'small_town') room.unlocked = true;
+        if (currentRoom === 'enchanted_forest') room.unlocked = true;
+        if (currentRoom === 'south_east_desert') room.unlocked = true;
+
+        const dest = room.connections[direction];
+        if (!rooms[dest]) {
+            setFeedback(STORY.messages.room_not_found);
+            return;
+        }
+        setFeedback(L('goMsg')(direction));
+        currentRoom = dest;
+        updateScene();
+    }
+
+    function gameTake(itemName) {
+        const room = rooms[currentRoom];
+        const idx = room.items.findIndex(i => i.name === itemName);
+        if (idx === -1) {
+            setFeedback(STORY.messages.item_not_found);
+            return;
+        }
+        inventory.push(room.items.splice(idx, 1)[0]);
+        setFeedback(L('takMsg')(itemName));
+        updateScene();
+    }
+
+    function gameInspect(itemName) {
+        const allItems = [...inventory, ...rooms[currentRoom].items];
+        const item = allItems.find(i => i.name === itemName);
+        if (item) {
+            setFeedback(item.description);
+        } else {
+            setFeedback(STORY.messages.item_not_in_backpack);
+        }
+    }
+
+    function gameUse(itemName) {
+        const item = inventory.find(i => i.name === itemName);
+        if (!item) {
+            setFeedback(STORY.messages.item_not_owned);
+            return;
+        }
+
+        const uses = STORY.item_uses[itemName] || {};
+        const locRef = currentRoom;
+        const internal = internalName(itemName);
+
+        switch (internal) {
+            case 'crocodile-teeth':
+                setFeedback(uses.default);
+                break;
+
+            case 'eagle-egg':
+                setFeedback(uses.default);
+                inventory = inventory.filter(i => i.name !== itemName);
+                updateInventoryUI();
+                break;
+
+            case 'feather':
+                setFeedback(uses.default);
+                break;
+
+            case 'drinking-bag':
+                if (locRef === 'small_town') {
+                    inventory = inventory.filter(i => i.name !== itemName);
+                    const t = uses.transforms_to;
+                    inventory.push({ name: t.name, description: t.description, used: false });
+                    setFeedback(uses.small_town);
+                    updateScene();
+                } else {
+                    setFeedback(uses.default);
+                }
+                break;
+
+            case 'key':
+                if (locRef === 'small_town') {
+                    const reveals = uses.reveals_items;
+                    const room = rooms[currentRoom];
+                    room.items = reveals.map(i => ({ name: i.name, description: i.description, used: false }));
+                    inventory = inventory.filter(i => i.name !== itemName);
+                    let msg = uses.small_town;
+                    msg += room.items.map(i => i.name).join(', ');
+                    setFeedback(msg);
+                    updateScene();
+                } else {
+                    setFeedback(uses.default);
+                }
+                break;
+
+            case 'torch':
+                if (locRef === 'canyon') {
+                    setFeedback(uses.canyon);
+                    const t = uses.transforms_to;
+                    item.name = t.name;
+                    item.description = t.description;
+                    updateScene();
+                } else {
+                    setFeedback(uses.default);
+                }
+                break;
+
+            case 'lighted-torch':
+                if (locRef === 'entrance_cave') {
+                    rooms[currentRoom].unlocked = true;
+                    // Add east/oost connection to cave_tunnel
+                    const eastDir = LANG === 'nl' ? 'oost' : 'east';
+                    rooms[currentRoom].connections[eastDir] = 'cave_tunnel';
+                    setFeedback(uses.entrance_cave);
+                    updateScene();
+                } else {
+                    setFeedback(uses.default);
+                }
+                break;
+
+            case 'full-waterbag':
+                if (locRef === 'start_desert') {
+                    rooms[currentRoom].unlocked = true;
+                    const south = LANG === 'nl' ? 'zuid' : 'south';
+                    const east = LANG === 'nl' ? 'oost' : 'east';
+                    const north = LANG === 'nl' ? 'noord' : 'north';
+                    rooms[currentRoom].connections[south] = 'south_desert';
+                    rooms[currentRoom].connections[east] = 'east_desert';
+                    rooms[currentRoom].connections[north] = 'north_desert';
+                    setFeedback(uses.start_desert);
+                    updateScene();
+                } else {
+                    setFeedback(uses.default);
+                }
+                break;
+
+            case 'driftwood':
+            case 'rope':
+                if (locRef === 'riverland') {
+                    // Show combine prompt
+                    const otherInternal = internal === 'driftwood' ? 'rope' : 'driftwood';
+                    const otherDisplay = displayName(otherInternal);
+                    showCombinePrompt(uses.riverland, itemName, otherInternal, otherDisplay, uses);
+                } else if (locRef === 'ocean') {
+                    setFeedback(uses.ocean);
+                } else {
+                    setFeedback(uses.default);
+                }
+                break;
+
+            case 'blunt-blades':
+                if (locRef === 'smithy') {
+                    setFeedback(uses.smithy);
+                    const t = uses.transforms_to;
+                    item.name = t.name;
+                    item.description = t.description;
+                    updateScene();
+                } else {
+                    setFeedback(uses.default);
+                }
+                break;
+
+            case 'horse-armor':
+                if (locRef === 'smithy') {
+                    setFeedback(uses.smithy);
+                    const t = uses.transforms_to;
+                    item.name = t.name;
+                    item.description = t.description;
+                    updateScene();
+                } else {
+                    setFeedback(uses.default);
+                }
+                break;
+
+            case 'draconian-armor': {
+                const talonsName = displayName('huge-talons');
+                if (locRef === 'start_mountain_pass') {
+                    item.used = true;
+                    let msg = uses.start_mountain_pass;
+                    const talons = inventory.find(i => i.name === talonsName);
+                    if (talons && talons.used) {
+                        msg += '\n' + uses.start_mountain_pass_combined;
+                        const south = LANG === 'nl' ? 'zuid' : 'south';
+                        rooms[currentRoom].connections[south] = 'mountain_pass';
+                        inventory = inventory.filter(i => i.name !== talonsName && i.name !== itemName);
+                        rooms[currentRoom].unlocked = true;
+                    } else if (talons) {
+                        msg += '\n' + uses.start_mountain_pass_not_combined;
+                    }
+                    setFeedback(msg);
+                    updateScene();
+                } else {
+                    setFeedback(uses.default);
+                }
+                break;
+            }
+
+            case 'huge-talons': {
+                const armorName = displayName('draconian-armor');
+                if (locRef === 'start_mountain_pass') {
+                    item.used = true;
+                    let msg = uses.start_mountain_pass;
+                    const armor = inventory.find(i => i.name === armorName);
+                    if (armor && armor.used) {
+                        msg += '\n' + uses.start_mountain_pass_combined;
+                        const south = LANG === 'nl' ? 'zuid' : 'south';
+                        rooms[currentRoom].connections[south] = 'mountain_pass';
+                        inventory = inventory.filter(i => i.name !== armorName && i.name !== itemName);
+                        rooms[currentRoom].unlocked = true;
+                    } else if (armor) {
+                        msg += '\n' + uses.start_mountain_pass_not_combined;
+                    }
+                    setFeedback(msg);
+                    updateScene();
+                } else {
+                    setFeedback(uses.default);
+                }
+                break;
+            }
+
+            default:
+                setFeedback(uses.default || STORY.messages.unknown_command);
+        }
+        saveGame();
+    }
+
+    // ====== COMBINE PROMPT ======
+    function showCombinePrompt(promptText, sourceItem, otherInternal, otherDisplay, uses) {
+        const overlay = document.getElementById('combine-overlay');
+        document.getElementById('combine-prompt').textContent = promptText;
+        const container = document.getElementById('combine-items');
+        container.innerHTML = '';
+
+        // Show all inventory items except the source as combine options
+        for (const item of inventory) {
+            if (item.name === sourceItem) continue;
+            const btn = document.createElement('button');
+            btn.textContent = item.name;
+            btn.onclick = () => {
+                overlay.style.display = 'none';
+                // Check if correct combination
+                const chosenInternal = internalName(item.name);
+                if (chosenInternal === otherInternal && inventory.find(i => i.name === item.name)) {
+                    // Success: build raft
+                    const south = LANG === 'nl' ? 'zuid' : 'south';
+                    rooms[currentRoom].connections[south] = 'farmland';
+                    rooms[currentRoom].unlocked = true;
+                    inventory = inventory.filter(i => i.name !== sourceItem && i.name !== item.name);
+                    setFeedback(uses.riverland_success);
+                    updateScene();
+                } else {
+                    setFeedback(uses.riverland_fail);
+                }
+            };
+            container.appendChild(btn);
+        }
+        overlay.style.display = 'flex';
+    }
+
+    function cancelCombine() {
+        document.getElementById('combine-overlay').style.display = 'none';
+    }
     </script>
 </body>
 </html>
