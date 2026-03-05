@@ -1,0 +1,391 @@
+{
+  "intro": "\n+++++++++++++++++++\nJe hebt ver en wijd gereisd in dienst van de drakenkoning. Je laatste opdrachten waren succesvol, maar de laatste tijd dwalen je gedachten steeds vaker af naar huis. Je laatste opdracht zou echter niet lang moeten duren en met versnelde pas vervolg je je weg.\n+++++++++++++++++++",
+  "rooms": {
+    "meadow_road": {
+      "name": "Weideweg",
+      "descriptions": {
+        "locked": "Je bevindt je op een weg omringd door vredige weilanden. Schapen en koeien grazen in het grasland en je kunt je bijna de herder voorstellen die naar zijn hond fluit. Er is echter geen herder en met zoveel schapen valt je dat op als ongewoon.\nHet is lang niet zonsondergang maar, als je omhoog kijkt, is er een lange rode streep zichtbaar aan de hemel. Een duister voorteken als je er ooit een zag.",
+        "unlocked": null
+      },
+      "connections": { "zuid": "small_town", "noord": "enchanted_forest", "oost": "canyon" },
+      "items": []
+    },
+    "canyon": {
+      "name": "Smalle Kloof",
+      "descriptions": {
+        "locked": "Je staat bij de ingang van een lange kloof. De zon staat hoog aan de hemel en schijnt zijn meedogenloze hitte op je neer.\nEen reusachtige adelaar blijft boven je cirkelen, alsof hij wacht tot de zon zijn werk doet. De rotsen en doornige struiken maken het navigeren door de kloof moeilijk.\nAls je rondkijkt, spot je een oude piramide aan de zijkant van de kloof. Als je erop klimt vind je een groot vergrootglas stevig op de top geplaatst. Je probeert het los te wrikken, maar het beweegt niet. Er zijn brandplekken eromheen. Hoofdschuddend over de vreemde religies in de wereld vervolg je je reis.",
+        "unlocked": null
+      },
+      "connections": { "west": "meadow_road", "zuid": "hilly_country" },
+      "items": [
+        { "name": "veer", "description": "\nDeze veer lijkt nutteloos en je begint te denken dat je hem misschien niet had moeten oppakken. Je hebt echter eerder vreemdere voorwerpen nuttig zien worden." }
+      ]
+    },
+    "hilly_country": {
+      "name": "Heuvelland",
+      "descriptions": {
+        "locked": "Een lieflijk pad slingert zich op en neer door bossen en heuvels voor je. Terwijl je doorloopt, schrik je op uit je dagdromen als je vele voetafdrukken op het pad opmerkt. Het lijkt erop dat een grote groep mensen onlangs door dit gebied is getrokken. Terwijl je verder loopt, vind je dat ze kleine voorwerpen langs de weg hebben laten vallen. Helaas zijn de meeste nutteloos.",
+        "unlocked": null
+      },
+      "connections": { "noord": "canyon", "west": "small_town" },
+      "items": [
+        { "name": "sleutel", "description": "\nEen enorme roestige sleutel. Het lijkt erop dat deze niet in een gewoon huishouden gebruikt kon worden. Het moet inderdaad een grote deur zijn om hem in te passen." }
+      ]
+    },
+    "small_town": {
+      "name": "Klein Stadje",
+      "descriptions": {
+        "locked": "Je staat voor de ingang van een klein stadje. Het ingangsbord zegt 'sta verenigd tegen het keizerrijk', een strijdkreet die de laatste tijd aan populariteit won. Inw:206, staat eronder, maar kleinere getallen zijn een paar keer doorgestreept. Nu lijkt het een spookstad want - na wat rondkijken - vind je er niemand. De inwoners zijn kennelijk allemaal in grote haast vertrokken. Er is een groot plein in het centrum van het stadje met een prachtige fontein. Dolfijnen blijven water spuiten voor het vermaak van een verlaten dorp. Een gevoel van irritatie van je afschuddend, spot je een enorm landhuis aan het hoofd van het plein. De enige die het waard is om te plunderen, helaas zit het op slot. Je vindt dat zelfs jij niet in staat bent om binnen te breken door de grote voordeur..",
+        "unlocked": "Je staat voor de ruïnes van het kleine dorp dat je kort daarvoor passeerde. De dorpelingen hadden gelijk om het te verlaten, denk je. Terwijl je je een weg baant door de ruïnes vind je de fontein en het landhuis nog intact."
+      },
+      "connections": { "noord": "meadow_road", "oost": "hilly_country" },
+      "items": []
+    },
+    "entrance_cave": {
+      "name": "Ingang van een Grot",
+      "descriptions": {
+        "locked": "Je spot een grot in de verte. Na een klim over een klein pad sta je ervoor. Je probeert naar binnen te kijken maar het is te donker om te zien. Had je maar wat licht.",
+        "unlocked": "\nJe spot een grot in de verte. Na een klim over een klein pad sta je ervoor. Je probeert naar binnen te kijken maar het is te donker om te zien. Gelukkig verlicht je fakkel de weg."
+      },
+      "connections": { "zuid": "enchanted_forest" },
+      "items": []
+    },
+    "enchanted_forest": {
+      "name": "Betoverd Bos",
+      "descriptions": {
+        "locked": "Je arriveert bij een vreemd cirkelvormig bos en concludeert dat het alleen het betoverde bos van de elfen kan zijn. Bij de rand spot je een prachtige boog versierd met bijna-echte elfen beelden. Als je naar het centrum van het bos loopt, vind je de resten van een occult ritueel van een elfenshamaan. Het slachtoffer van het bloedoffer - een klein eekhoorntje - levenloos op het altaar. Het lijkt erop dat de elfen de rode veeg aan de hemel ook als een slecht voorteken beschouwen. Hoewel je jezelf als ruimdenkend beschouwt, betwijfel je of het offeren van een eekhoorn iets goeds zal doen. Terwijl je verder loopt, dringt een afschuwelijke stank je neus binnen. Het lijkt erop dat sommige elfen dezelfde twijfels hadden en hun toevlucht zochten in sterke drank. Je vindt ze met een kater en liggend in hun eigen braaksel.",
+        "unlocked": "Als je het betoverde bos opnieuw betreedt voelt het nu veel donkerder. Je vindt deze keer geen elfen met een kater, alleen verlaten boomhutten. Hier heeft niet lang geleden een slachting plaatsgevonden. In het centrum van het bos lijkt een massagraf te zijn, nog niet bedekt. Je vindt een eenzaam eekhoorntje dat rondscharrelt. Als je je omdraait om te vertrekken, voel je dat er enige poëtische rechtvaardigheid in zit."
+      },
+      "connections": { "zuid": "meadow_road", "noord": "entrance_cave" },
+      "items": [
+        { "name": "drinkzak", "description": "\nEen zeer grote drinkzak gemaakt van hertenhuid. Het lijkt oorspronkelijk bedoeld als offer, maar in hun roes hebben de elfen het gebruikt voor hun drinkspelen. De geur van sterke drank hangt er nog in." }
+      ]
+    },
+    "cave_tunnel": {
+      "name": "Grottunnel",
+      "descriptions": {
+        "locked": "Voorzichtig stap je de grot in. Je hoorde ooit een verhaal over een jongetje dat een grot in ging en dagenlang ronddwaalde. Toevallig was dat verhaal misschien wel de oorsprong van je grotfobie. Je gevoelens van naderend onheil onderdrukkend, ga je verder. Halverwege kom je een groep mannen tegen die kamp houden. Ze zien er uitgehongerd uit maar geven je toch wat vlees. Het is lang niet genoeg om je maag te vullen, maar je neemt wat je kunt krijgen en gaat verder. De rest van je reis door de grot is onopvallend.",
+        "unlocked": null
+      },
+      "connections": { "west": "entrance_cave", "oost": "start_desert" },
+      "items": []
+    },
+    "start_desert": {
+      "name": "Eindeloze Woestijn",
+      "descriptions": {
+        "locked": "Vanuit de ingang van de grot strekt zich een eindeloze woestijn uit. Je begint je te voelen alsof je gevangen zit tussen twee kwaden. Hoewel je denkt dat je het behoorlijk lang zonder water kunt uithouden, durf je de woestijn niet in zonder enige vloeibare substanties. Je kijkt ook niet bepaald uit naar de terugtocht door de grot.",
+        "unlocked": "Een uitgestrekte woestijn strekt zich voor je uit. Gerustgesteld door de drinkzak vervolg je je weg het eerste zandduin op."
+      },
+      "connections": { "west": "cave_tunnel" },
+      "items": []
+    },
+    "east_desert": {
+      "name": "Eindeloze Woestijn",
+      "descriptions": {
+        "locked": "Kleine hittegolven trillen langzaam aan de horizon. De woestijn strekt zich eindeloos uit naar alle kanten. Je vervloekt jezelf dat je er niet aan gedacht hebt om enige schaduw mee te nemen. De zon beukt meedogenloos en je hoofd begint te bonken. Met een lichte hoofdpijn die achter je oren opkomt, vervolg je je reis.",
+        "unlocked": null
+      },
+      "connections": { "west": "start_desert", "noord": "north_east_desert", "zuid": "south_east_desert" },
+      "items": []
+    },
+    "north_east_desert": {
+      "name": "Eindeloze Woestijn",
+      "descriptions": {
+        "locked": "Je staat naast de troon van je heer terwijl hij opstaat midden in zijn tirade tegen een van zijn vazal-baronnen. Bij dit soort gelegenheden heeft hij je graag in de buurt om mensen te intimideren. De troonzaal is groot en wijd. Lange wandtapijten die de veldslagen van het keizerrijk afbeelden hangen langs de muren. Een ervan toont een enkele ruiter op zijn draak, die een heel regiment van een lang vergeten koninkrijk aanvalt. Je bent bijzonder gesteld op die, want het is je grootvader die vereeuwigd is. Een gevoel van trots vervult je als je denkt aan de lange geschiedenis van dienst en loyaliteit die je familie heeft met het keizerrijk. Als je je omdraait zie je je familie terwijl de kleintjes om de voeten van hun moeder rennen. Hun spel is luidruchtig maar onschuldig terwijl ze over het binnenplein hollen.\nMet een schok schrik je wakker. Een klein hagedisje glijdt weg in zijn holletje. Je probeert je zenuwen te kalmeren. De woestijn is 's nachts lang niet zo leeg als overdag. Lang niet zo heet ook. Je besluit de rest van de nacht door te reizen, hoewel je geluk zult moeten hebben om overdag schaduw te vinden om te slapen.",
+        "unlocked": null
+      },
+      "connections": { "zuid": "east_desert", "west": "north_desert" },
+      "items": []
+    },
+    "north_desert": {
+      "name": "Eindeloze Woestijn",
+      "descriptions": {
+        "locked": "Terwijl je strompelend vooruit gaat, vind je weer een fata morgana die rechts van je schittert. Wanhopig genoeg besluit je deze te bekijken. Het is uit de richting waar je heen ging, maar je zult het toch niet veel langer overleven. Het is werkelijk een zeer pragmatische beslissing. Je lacht om de ironie dat deze natuurkracht slaagt waar zovelen hebben gefaald. Het is bijna zonsondergang als je de oase nadert. Het schitteren rond het visioen was gestopt toen de zon lager kwam te staan, dus je twijfelt er niet langer aan dat het echt is. Met een zucht van opluchting laat je je neervallen naast het kleine meertje in de oase. Na het bijvullen van je zak besluit je hier een paar dagen te blijven om te herstellen en te proberen wat wild te jagen.",
+        "unlocked": null
+      },
+      "connections": { "zuid": "start_desert", "oost": "north_east_desert" },
+      "items": []
+    },
+    "south_east_desert": {
+      "name": "Eindeloze Woestijn",
+      "descriptions": {
+        "locked": "Lopend door dit onherbergzame land zie je in de verte wat schaarse struiken. Je nadert misschien eindelijk het einde van je tocht door de woestijn. Je struikelt over iets. De woestijn is zo glad als zand dus je draait je om voor een betere blik. Het is een leren koord dat je voeten ving. Je voelt dat het ergens aan vastzit en begint het uit te graven. Het leer was onderdeel van een groot gepantserd paard. Het skelet van het paard is schoongeschuurd door zandstormen. Het harnas is echter nog grotendeels intact.",
+        "unlocked": "Lopend door dit onherbergzame land zie je in de verte wat schaarse struiken. Je nadert misschien eindelijk het einde van je tocht door de woestijn."
+      },
+      "connections": { "noord": "east_desert", "west": "south_desert", "zuid": "tundra" },
+      "items": [
+        { "name": "paardenharnas", "description": "\nLicht verroest. Het paard waarop je het vond zal er geen gebruik meer van maken. Misschien vind je een mogelijkheid om er in de toekomst op een of andere manier gebruik van te maken." }
+      ]
+    },
+    "south_desert": {
+      "name": "Eindeloze Woestijn",
+      "descriptions": {
+        "locked": "Het lijkt nu alsof er geen andere wereld bestaat dan deze eindeloos rollende duinen. Je gaat er een af en een ander op. Weer een ander af. De cyclus herhaalt zich .. oneindig. Als je de top van weer een duin bereikt, spot je het staartje van een kleine karavaan in de verte. Je denkt erover om het te volgen en de weg te vragen, maar aangezien ze de verkeerde kant op gaan besluit je anders. Inhalen zou minstens het grootste deel van een dag kosten. Je acht het niet de moeite waard voor een omweg.\nAan de andere kant van het duin afdalend, vervolg je je weg het volgende op.",
+        "unlocked": null
+      },
+      "connections": { "noord": "start_desert", "oost": "south_east_desert" },
+      "items": []
+    },
+    "tundra": {
+      "name": "Toendra",
+      "descriptions": {
+        "locked": "Het landschap om je heen vertoont subtiele veranderingen. Het zand onder je wordt vervangen door rotsachtige grond en bomen worden spaarzaam gevonden aan de horizon. Je bent de toendra binnengetreden aan de randen van de grenzen van het keizerrijk. De paardenmensen die deze landen berijden zijn een trots volk en hebben lang het gezag van het keizerrijk getrotseerd. Hun kracht komt echter voornamelijk van hun snelheid en mobiliteit, wat veel minder nuttig zou zijn in het land van het keizerrijk. Gevangen tussen de woestijn en het keizerrijk had zich al vroeg in hun geschiedenis een ongemakkelijke status quo gevestigd. Jaren van economische uithongering en isolatie hadden hun aantallen gedecimeerd. Ze vormden nu niet langer een serieuze bedreiging voor iedereen behalve een eenzame reiziger. Waakzaam houd je je ogen op de horizon terwijl je je een weg baant door het land.",
+        "unlocked": null
+      },
+      "connections": { "noord": "south_east_desert", "west": "tundra_west", "zuid": "forest" },
+      "items": []
+    },
+    "tundra_west": {
+      "name": "Toendra",
+      "descriptions": {
+        "locked": "Een uur geleden spotte je een eenzame ruiter achter je aan de horizon. Ruiters staan erom bekend in groepen te reizen en jagen, dus je bent er zeker van dat er meer moeten zijn. Je zou ze afgeschrikt kunnen hebben, maar ruiters zijn zelden lafaards en je te zien zou wraakgedachten in hun hoofden geplant kunnen hebben. Je opdracht betrof de ruiters niet en het verstandigste was om ze te vermijden. Terwijl je je volgende zet overdenkt spot je een stofwolk achter je. Het lijkt erop dat de keuze voor je gemaakt is. Het land biedt weinig mogelijkheid om je te verstoppen. Gelukkig, als je nu je tempo verhoogt, zal het nacht zijn als ze je inhalen. Kalm val je in een gemakkelijke draf.\nTerwijl je rent, denk je na over je opties. De ruiters zijn koppig en zullen waarschijnlijk niet opgeven. Ze zullen zich tijdens de nacht verspreiden en een groot net weven waarin ze hopen je te vangen. Als de schemering invalt zie je geen stofwolk meer achter je. Of ze hebben opgegeven of deden zoals je voorspelde. Na een tijdje bevind je je in een voordeliger landschap. Een labyrint van hoge rotsen die boven je hoofd uitsteken. Je oren vangen het gedempte geluid op van een paard met doek om zijn hoeven gebonden. Weer een favoriete truc van de ruiters. Gelukkig zijn je oren scherper dan die van gewone mannen en terwijl je je verstopt in een kleine spleet rijdt een eenzame ruiter je voorbij. Stilletjes beweeg je van achteren naar hem toe. Als de ruiter je ziet zal hij luid fluiten, waarmee hij de rest van de groep op je afstuurt. Je overbrugt de laatste paar meter in een sprint. De ruiter draait zich geschrokken om, maar je springt bovenop het paard en schakelt de ruiter uit voordat hij zijn vrienden kan roepen. Met een andere snelle beweging breng je het paard tot stilte. Snel doorzoek je de tassen van de ruiter. Niets opmerkelijks behalve een set middellange, botte messen.\nNadenkend over wat nu te doen, keer je om en ga terug. Het net van de ruiters heeft nu een gat en je bent van plan erdoorheen te glippen. De rest van de nacht breng je rennend door in de richting waar je vandaan kwam. Tegen de ochtend vind je ...",
+        "unlocked": null
+      },
+      "connections": { "oost": "tundra" },
+      "items": [
+        { "name": "botte-messen", "description": "\nNiet veel nut in hun huidige vorm. Hoewel je denkt dat de meeste wapens nutteloos zijn. Deze specifieke zouden omgewerkt kunnen worden voor jouw gebruik." }
+      ]
+    },
+    "forest": {
+      "name": "Bos",
+      "descriptions": {
+        "locked": "Je betreedt het bos met enig gevoel van opluchting. Het bos wordt al snel dichter en blokkeert spoedig het meeste licht. Na een paar uur kom je een klein weggetje tegen. Je neemt snel je positie in en besluit welke route je neemt. Het pad slingert door het bos en je maakt nu goede vaart. Niet lang daarna kom je een man tegen die aan een grote boom hangt. Zijn hoofd gemerkt met de tatoeage van een verkrachter, het lijkt erop dat zijn laatste overtreding met een andere straf werd beantwoord. Het touw dat werd gebruikt ziet er stevig en sterk uit.",
+        "unlocked": null
+      },
+      "connections": { "noord": "tundra", "zuid": "riverland" },
+      "items": [
+        { "name": "touw", "description": "\nLang en stevig, dit touw ziet er dik genoeg uit om een draak mee vast te binden. Je grinnikt. Dat zal niet snel gebeuren." }
+      ]
+    },
+    "riverland": {
+      "name": "Een brede rivier",
+      "descriptions": {
+        "locked": "Je komt bij een brede rivier. Met snelle stromingen en steile oevers kun je hem niet te voet oversteken. Beide kanten opkijkend zie je geen brug of vriendelijke veerman. Onzeker welke kant je op moet, gooi je mentaal een munt op en kiest een richting om de rivier te volgen.",
+        "unlocked": "Terug bij de rivier. Je vlot dobbert vredig waar je het achterliet."
+      },
+      "connections": { "noord": "forest", "oost": "river_to_mountain", "west": "ocean" },
+      "items": []
+    },
+    "river_to_mountain": {
+      "name": "Rivier langs de berg",
+      "descriptions": {
+        "locked": "De rivier stroomopwaarts volgend vind je na dagen dat hij verdwijnt in de zijkant van een steile bergwand. Geen weg eromheen hier. Ook geen goede plek om de rivier over te steken, want het wemelt van een bijzonder gemeen uitziend ras krokodillen. Deze kant lijkt een doodlopend eind.",
+        "unlocked": null
+      },
+      "connections": { "west": "riverland" },
+      "items": [
+        { "name": "krokodillentanden", "description": "\nDit vond je op de schedel van een dode krokodil, aan de oever van de rivier. Scherp als de hel, je denkt dat het in de toekomst misschien van enig nut kan zijn." }
+      ]
+    },
+    "ocean": {
+      "name": "Rivier naar Oceaan",
+      "descriptions": {
+        "locked": "De rivier stroomafwaarts volgen deed je wensen dat je een manier had om - op - de rivier te reizen, in plaats van - naast -. Natuurlijk, als je een middel had om op de rivier te reizen, zou je niet stroomafwaarts hoeven te reizen.\nDe rivier werd langzaam breder en veranderde geleidelijk in mangrove. Wat het er niet makkelijker op maakte. Na een halve dag spot je het einde van de rivier, waar hij in de oceaan stroomt en een uur later loop je het strand op. Rotsen steken iets verder de baai in. Als het tij stijgt staan die onder water. Gevaarlijke plek zonder vuurtoren. Alsof je punt bewezen moet worden vind je veel drijfhout van een scheepswrak op het strand nog geen halve kilometer van de rivier. Het doel verloren, ga je zitten en slaat je kamp op voor de avond. Je denkt na over wat je nu moet doen.",
+        "unlocked": null
+      },
+      "connections": { "oost": "riverland" },
+      "items": [
+        { "name": "drijfhout", "description": "\nDikke balken van de mast en stevige planken van het roer. Stevig spul en zeker goed genoeg als basismateriaal voor alles wat je maar kunt bedenken." }
+      ]
+    },
+    "farmland": {
+      "name": "Korenvelden",
+      "descriptions": {
+        "locked": "Reizend door velden van maïs en graan bevind je je in een zeer vruchtbaar deel van het keizerrijk. De boeren die de velden bewerken kijken vermoeid als je hen passeert, maar je aanblik is hen vertrouwd en de afstand is ver genoeg om ze niet weg te jagen. Rusteloos nu je in het keizerrijk bent, vervolg je je weg.",
+        "unlocked": null
+      },
+      "connections": { "noord": "riverland", "zuid": "mountain", "west": "smithy" },
+      "items": []
+    },
+    "mountain": {
+      "name": "Een Torenhoge Berg",
+      "descriptions": {
+        "locked": "Je voelt het einde van je reis naderen en je bent ongeduldig om thuis te komen. Je staat aan de voet van een enorme berg. Een paar uur eerder begon het langzaam te sneeuwen en de grond is nu wit bedekt. De langzame dans van vallende sneeuwvlokken zal een woeste storm zijn op de top van de berg. Je timing had niet slechter kunnen zijn. Je bent blij dat je vertrouwd bent met dit terrein, aangezien je je vaag herinnert dat er een pas naar het oosten is.",
+        "unlocked": null
+      },
+      "connections": { "noord": "farmland", "oost": "start_mountain_pass", "west": "canyon_topside" },
+      "items": []
+    },
+    "start_mountain_pass": {
+      "name": "Ingang van de Oostelijke Bergpas",
+      "descriptions": {
+        "locked": "Als je de bergpas nadert spot je 6 Griffioenen die hoog in de lucht cirkelen. Nieuws van je opdracht moet je aartsvijanden bereikt hebben. De bergpas nu opgaan zal je in open terrein achterlaten en zeker gezien worden. Twee of drie had je aangekund maar tegen zes vechten zou een onzekere uitkomst opleveren. Voor het eerst op deze queeste voel je spijt dat je je gevechtsuitrusting thuis hebt gelaten.",
+        "unlocked": "De zes griffioenen cirkelen nog steeds boven de pas, maar je voelt je gesterkt door bewapend en geharnast te zijn om verder te gaan."
+      },
+      "connections": { "west": "mountain" },
+      "items": []
+    },
+    "mountain_pass": {
+      "name": "De Oostelijke Bergpas",
+      "descriptions": {
+        "locked": "Voorzichtig hurk je naast een van de laatste bomen voor de grote en open vlakte van de pas. Je ziet zes van hen direct boven je cirkelen, wat waarschijnlijk betekent dat ze je gezien hebben. Griffioenen staan niet bekend om hun intelligentie, maar het zijn roedeldieren en hun jachtinstincten zijn uitstekend. In de lucht zijn betekent dat zij het voordeel hebben om het slagveld te kiezen, wat waarschijnlijk in de open vlakte zal zijn waar ze van alle kanten kunnen komen. Jij hebt echter liever het initiatief en hoewel je je zelfverzekerd voelt, besluit je te wachten tot de duisternis invalt. Het nachtzicht van griffioenen is gelijk aan het jouwe, maar de nacht is donker vanavond en ze zullen laag moeten vliegen of het risico lopen je te verliezen.\n\nJe loopt langzaam het bos uit en kijkt omhoog. De sikkel van de maan is onzichtbaar achter dikke donkere wolken. Het effect wordt enigszins verminderd door de witheid van de sneeuw, die de nacht verlicht. Het zal moeten volstaan. Geen van de beesten in de buurt voor zover je kunt zien. Voorzichtig ga je op pad.\n\nAls je het gekrijs uren later hoort, dacht je bijna dat je van ze af was. Je hurkt neer en kijkt omhoog richting het geluid. Drie van hen vliegen laag op ongeveer 50 meter rechts van je. Ze vliegen parallel aan je en bereiden geen aanval voor. Dat slaat nergens op. Waarom je waarschuwen en tijd geven om ... Je wordt zijwaarts geraakt door iets zwaars. Instinctief hurk je en probeer je je zwaartepunt te verlagen maar je reactie was laat en je valt opzij. Terwijl je dat doet zwiep je echter je staart rond en word je beloond met stevig contact en een pijnlijk gekrijs. Je weet je vast te grijpen en wordt omhoog getrokken door de griffioen die probeert weg te komen. De twee anderen die vlak achter hem zaten, vinden hun situatie ineens veel minder prettig en proberen hun koers te wijzigen. Gebruikmakend van het momentum van je staartactie, slingert je je lichaam richting de dichtstbijzijnde van de twee achtervolgers en maakt stevig contact met een van zijn vleugels. Krijsend en jankend...",
+        "unlocked": null
+      },
+      "connections": { "west": "start_mountain_pass", "oost": "home" },
+      "items": []
+    },
+    "canyon_topside": {
+      "name": "Bovenkant van de Kloof",
+      "descriptions": {
+        "locked": "Langzaam nader je de klif. Het is een loodrechte val van een paar honderd meter naar de bodem van deze kloof. Een paar meter onder de rand zie je het nest van een grote adelaar. Je laat je zakken om een kijkje te nemen en vindt wat onuitgebroede eieren. Het is een tijdje geleden dat je gegeten hebt en hongerig grijp je deze kans. Als je de klif weer opklimt glimlach je als je ergens ver beneden een kleine piramide ziet.",
+        "unlocked": null
+      },
+      "connections": { "oost": "mountain", "noord": "smithy" },
+      "items": [
+        { "name": "adelaarsei", "description": "\nEr eentje besparend voor later hield je je in en nam één ei mee. In ieder geval zul je voor enige tijd geen honger lijden." }
+      ]
+    },
+    "smithy": {
+      "name": "Groot dorp",
+      "descriptions": {
+        "locked": "Je nadert een groot dorp en betreedt het door de hoofdpoort. De straten zijn leeg want de bevolking verschuilt zich in hun huizen. Je kent dit dorp en zou het met rust hebben gelaten als je niet iets nodig had. Over de hoofdweg lopend nader je de smederij.\nHoewel de smid een grote man is, wil hij eerst niet naar buiten komen. Je moet aandringen. Hoewel de stok genoeg zou zijn geweest, heb je genoeg medelijden met de man om ook de wortel te gebruiken. Je belooft hem dat hij gecompenseerd zal worden door het keizerrijk. Hij lijkt bereid om zijn vak uit te oefenen.",
+        "unlocked": null
+      },
+      "connections": { "zuid": "canyon_topside", "oost": "farmland" },
+      "items": []
+    },
+    "home": {
+      "name": "Drakenhol",
+      "descriptions": {
+        "locked": "Opgewekt beklim je de brede rondlopende gang omhoog naar je hol. De voorouders van de keizer hadden dit speciaal laten maken voor jouw geslacht. Als je de top bereikt hoor je het gejuich van vreugde en verrassing als je jonge welpen je zien. Roepend van blijdschap rennen ze naar je toe en springen bovenop je. Lachend laat je ze begaan en begin je ze speels rond te gooien. Later zal er tijd zijn om verslag uit te brengen aan de keizer over je vernietiging van de mensen- en elfenopstand. Voor nu geniet je van het simpele spel van je familie.\n\n\n\n",
+        "unlocked": null
+      },
+      "connections": { "west": "mountain_pass" },
+      "items": []
+    }
+  },
+  "item_uses": {
+    "krokodillentanden": {
+      "default": "\nJe bekijkt het en probeert een gebruik te bedenken in je huidige situatie. De taak gaat je te boven. Je bergt het weer op."
+    },
+    "adelaarsei": {
+      "default": "\nJe eet snel je laatste ei op. Het vult je maag en maakt je slaperig maar voldaan."
+    },
+    "veer": {
+      "default": "\nJe krabt jezelf onder je voeten met de puntige kant en geniet van een kortstondige verlichting van een aanhoudende jeuk."
+    },
+    "drinkzak": {
+      "small_town": "\nJe vult de drinkzak met water. Je spoelt hem eerst een paar keer om de drank eruit te krijgen.",
+      "default": "\nJe kijkt rond en vraagt je af wat je ermee kunt doen. Er schiet je niets te binnen. Je bergt het weer op.",
+      "transforms_to": {
+        "name": "volle-waterzak",
+        "description": "\nTot de rand gevuld met sprankelend koud water. Zeker om je dorst te lessen in tijden van nood. Zwaar om te dragen voor elke volwassen man, je vindt het logisch dat jij het zonder veel moeite kunt dragen."
+      }
+    },
+    "sleutel": {
+      "small_town": "\nJe opent de deur van het landhuis en vindt binnen:\n",
+      "default": "\nJe weet echt niet wat je daar mee moet doen hier.",
+      "reveals_items": [
+        { "name": "fakkel", "description": "\nEen lange stok met wat doek aan het eind.\nBij nader inzien lijkt het vochtig van olie." }
+      ]
+    },
+    "fakkel": {
+      "canyon": "\nJe plaatst de fakkel onder het vergrootglas en wacht tot de zon zijn werk doet. Na een tijdje word je beloond met wat rook en na nog langer wachten vat de fakkel vlam. Je bent nu in het bezit van een brandende fakkel.",
+      "default": "\nJe houdt de fakkel in je handen en wacht tot er iets gebeurt. Hoewel niemand kijkt, voel je je na een tijdje enigszins idioot. Met een klein gevoel van schaamte berg je hem weer op.",
+      "transforms_to": {
+        "name": "brandende-fakkel",
+        "description": "\nJe fakkel brandt langzaam en werpt een griezelig licht. De duisternis lijkt nu veel minder eng."
+      }
+    },
+    "brandende-fakkel": {
+      "entrance_cave": "\nAls je je fakkel omhoog houdt verlicht je de grot. Je voelt je moedig genoeg om de grot nu binnen te gaan.",
+      "default": "\nJe brandt jezelf met de fakkel. Vloekend berg je hem op. Het had hier toch geen nut."
+    },
+    "volle-waterzak": {
+      "start_desert": "\nHet zware gewicht van de waterzak op je rug voelend, voel je je verzekerd van je vermogen om in de woestijn te overleven. Je hoeft alleen nog te kiezen welke richting je opgaat.",
+      "default": "\nJe morst per ongeluk wat water. Niet echt van belang, maar op de een of andere manier voel je je er weer klein door. Je ouders hadden geen geduld met onhandigheid."
+    },
+    "drijfhout": {
+      "riverland": "Met welk voorwerp wil je dit combineren?",
+      "riverland_success": "\nDe laatste knoop vastmakend kijk je tevreden naar je creatie. Het enorme vlot zal groot genoeg zijn om je aanzienlijke omvang te dragen. Zelfverzekerd over de kwaliteit duw je het de rivier op.",
+      "riverland_fail": "\nJe weet niet hoe je die moet combineren.",
+      "ocean": "\nDe rivier is hier in mangrove veranderd. Geen goede plek om over te steken.",
+      "default": "\nJe staart er een tijdje naar en wacht tot het kwartje valt.\nHet valt niet. Dan maar iets anders bedenken."
+    },
+    "touw": {
+      "riverland": "Met welk voorwerp wil je dit combineren?",
+      "riverland_success": "\nDe laatste knoop vastmakend kijk je tevreden naar je creatie. Het enorme vlot zal groot genoeg zijn om je aanzienlijke omvang te dragen. Zelfverzekerd over de kwaliteit duw je het de rivier op.",
+      "riverland_fail": "\nJe weet niet hoe je die moet combineren.",
+      "ocean": "\nDe rivier is hier in mangrove veranderd. Geen goede plek om over te steken.",
+      "default": "\nJe staart er een tijdje naar en wacht tot het kwartje valt.\nHet valt niet. Dan maar iets anders bedenken."
+    },
+    "botte-messen": {
+      "smithy": "\nMet jouw instructies begint de smid aan je messen te werken. Een jonge leerling stookt het vuur op, terwijl de smid de messen in de rode kolen legt. Na een paar uur werk komt hij terug met een set reusachtige-klauwen. Je inspecteert ze met oog voor detail. Na een tijdje snuif je goedkeurend. Deze zullen voldoen.",
+      "default": "Geen nut voor die hier. In hun huidige vorm zijn ze nutteloos.",
+      "transforms_to": {
+        "name": "reusachtige-klauwen",
+        "description": "\nAls je deze probeert te passen, denk je dat ze zullen voldoen.\nHoewel de smid niet bekend was met het ontwerp, deed hij er goed genoeg werk mee."
+      }
+    },
+    "paardenharnas": {
+      "smithy": "\nDe smid lijkt geïnteresseerd in deze klus. Na het afvuren van een half dozijn vragen gaat hij aan het werk. Het zal even duren, waarschuwt hij. Je installeert je voor zijn winkel. Terwijl de smid werkt, overwint de nieuwsgierigheid van zijn kinderen langzaam hun angst, en een voor een komen ze naar buiten. Je houdt van kinderen van elke grootte, dus je doet mee met hun jeugdig spel. Als de smid terugkomt met zijn werk nadert het de middag. Terwijl hij zijn kinderen naar binnen stuurt voor de lunch, bekijk je zijn werk. Je bent onder de indruk en belooft hem dat je zijn werk zult aanbevelen bij de meestersmid van de keizer als je thuiskomt. Hij lijkt tevreden over zichzelf.",
+      "default": "\nGeen nut voor dat hier. In zijn huidige vorm is het nutteloos.",
+      "transforms_to": {
+        "name": "drakenharnas",
+        "description": "\nDe smid deed uitstekend werk hieraan! Het harnas glanst als nieuw en past als een handschoen. Er was wat extra metaal nodig, maar de naden zijn nauwelijks zichtbaar."
+      }
+    },
+    "drakenharnas": {
+      "start_mountain_pass": "\nLangzaam en sereen trek je het drakenharnas aan.",
+      "start_mountain_pass_combined": "\nGecombineerd met je klauwen ben je klaar voor de strijd. Je bent voorbereid om de pas nu over te steken.",
+      "start_mountain_pass_not_combined": "Je voelt je veel veiliger nu, maar betwijfelt of het genoeg zal zijn tegen de griffioenen.",
+      "default": "\nJe trekt het aan en ziet er stoer uit. Verbeeld je je. Verder geen nut. Je bergt het weer op in je zak."
+    },
+    "reusachtige-klauwen": {
+      "start_mountain_pass": "\nJe doet de klauwen over je poten. Je knikt goedkeurend terwijl je het extra bereik test dat ze je geven.",
+      "start_mountain_pass_combined": "\nGecombineerd met je harnas ben je klaar voor de strijd. Je bent voorbereid om de pas nu over te steken.",
+      "start_mountain_pass_not_combined": "Je voelt je veel veiliger nu, maar betwijfelt of het genoeg zal zijn tegen de griffioenen.",
+      "default": "\nJe doet ze aan en ziet er stoer uit. Verbeeld je je. Verder geen nut. Je bergt ze weer op in je zak."
+    }
+  },
+  "messages": {
+    "auto_resume": "Het spel wordt automatisch hervat als je eerder hebt gespeeld. (op basis van je naam)",
+    "name_prompt": "Wat is je naam?",
+    "choose_action": "Kies een actie.\nTyp acties, voor een hint van mogelijke acties.",
+    "separator": "------------------------",
+    "item_taken": "Je stopt de %{item} in je zak.",
+    "item_not_found": "Dat voorwerp is niet in deze kamer.",
+    "item_not_in_backpack": "Je kunt dat voorwerp niet vinden en hebt het ook niet in je rugzak.",
+    "item_not_owned": "\nJe lijkt dat voorwerp niet bij je te hebben.",
+    "directions_header": "\nVanuit hier kun je gaan: \n",
+    "go_prefix": "\nJe gaat ",
+    "room_not_found": "\nOeps, die kamer lijkt niet te bestaan in de wereld!",
+    "cant_go": "\nHet lijkt niet mogelijk om die kant op te gaan. Kies een andere richting.",
+    "sack_header": "\nJe hebt in je zak:",
+    "sack_empty": "\nJe zak is leeg.",
+    "unknown_command": "\nJe krabt achter je oren en denkt na.\nNee, je weet echt niet hoe je dat moet doen..",
+    "possible_actions": "\nMogelijke acties: \n-richtingen\n-ga <noord/zuid/oost/west>\n-pak <voorwerp>\n-bekijk <voorwerp>\n-gebruik <voorwerp>\n-zak\n-stop"
+  },
+  "direction_map": {
+    "noord": "north",
+    "zuid": "south",
+    "oost": "east",
+    "west": "west"
+  },
+  "command_map": {
+    "richtingen": "directions",
+    "ga": "go",
+    "pak": "take",
+    "gebruik": "use",
+    "bekijk": "inspect",
+    "zak": "sack",
+    "acties": "actions",
+    "stop": "exit"
+  },
+  "item_name_map": {
+    "krokodillentanden": "crocodile-teeth",
+    "adelaarsei": "eagle-egg",
+    "veer": "feather",
+    "drinkzak": "drinking-bag",
+    "sleutel": "key",
+    "fakkel": "torch",
+    "brandende-fakkel": "lighted-torch",
+    "volle-waterzak": "full-waterbag",
+    "drijfhout": "driftwood",
+    "touw": "rope",
+    "botte-messen": "blunt-blades",
+    "paardenharnas": "horse-armor",
+    "drakenharnas": "draconian-armor",
+    "reusachtige-klauwen": "huge-talons"
+  }
+}

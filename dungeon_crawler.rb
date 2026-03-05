@@ -1,7 +1,19 @@
 require 'yaml'
 require 'json'
 
-STORY = JSON.parse(File.read(File.join(__dir__, 'story.json')))
+puts "Choose language / Kies taal:"
+puts "1. English"
+puts "2. Nederlands"
+lang_choice = $stdin.gets.chomp
+story_file = lang_choice == "2" ? 'verhaal.json' : 'story.json'
+STORY = JSON.parse(File.read(File.join(__dir__, story_file)))
+
+# Maps for translating player input back to internal keys (Dutch -> English)
+DIRECTION_MAP = STORY["direction_map"] || {}
+COMMAND_MAP = STORY["command_map"] || {}
+ITEM_NAME_MAP = STORY["item_name_map"] || {}
+# Reverse map: English internal name -> display name (for cross-item references)
+ITEM_DISPLAY_MAP = ITEM_NAME_MAP.invert
 
 class Dungeon
 	attr_accessor :player
@@ -103,21 +115,27 @@ class Player
 			puts STORY["messages"]["item_not_in_backpack"]
 		end
 	end
+	# Get the display name for an internal English item name
+	def display_name(english_name)
+		ITEM_DISPLAY_MAP[english_name] || english_name
+	end
+
 	def use(item_name)
 		if !items.select {|i| i.name == item_name}.empty? #Player can only use items he has with him.
 			uses = STORY["item_uses"][item_name] || {}
 			location_ref = @dungeon.find_room_in_dungeon(@location).reference.to_s
-			case item_name
+			internal_name = ITEM_NAME_MAP[item_name] || item_name
+			case internal_name
 			when "crocodile-teeth"
 				puts uses["default"]
 			when "eagle-egg"
 				puts uses["default"]
-				items.delete_if {|i| i.name == "eagle-egg"}
+				items.delete_if {|i| i.name == item_name}
 			when "feather"
 				puts uses["default"]
 			when "drinking-bag"
 				if @dungeon.find_room_in_dungeon(@location).reference == :small_town
-					items.delete_if {|i| i.name == "drinking-bag"}
+					items.delete_if {|i| i.name == item_name}
 					transforms = uses["transforms_to"]
 					items << Item.new(transforms["name"], transforms["description"])
 					puts uses["small_town"]
@@ -129,7 +147,7 @@ class Player
 					reveals = uses["reveals_items"]
 					@dungeon.find_room_in_dungeon(@location).items = reveals.map {|i| Item.new(i["name"], i["description"])}
 					@dungeon.find_room_in_dungeon(@location).items.flatten
-					items.delete_if {|i| i.name == "key"}
+					items.delete_if {|i| i.name == item_name}
 					s = uses["small_town"]
 					@dungeon.find_room_in_dungeon(@location).items.each { |i| s += i.name + ", " }
 					puts s
@@ -140,7 +158,7 @@ class Player
 				if @dungeon.find_room_in_dungeon(@location).reference == :canyon
 					puts uses["canyon"]
 					transforms = uses["transforms_to"]
-					t = items.select {|i| i.name == "torch"}
+					t = items.select {|i| i.name == item_name}
 					t[0].name = transforms["name"]
 					t[0].description = transforms["description"]
 				else
@@ -149,7 +167,7 @@ class Player
 			when "lighted-torch"
 				if @dungeon.find_room_in_dungeon(@location).reference == :entrance_cave
 					@dungeon.unlock_room
-					@dungeon.find_room_in_dungeon(@location).add_connection([:east, :cave_tunnel])
+					@dungeon.find_room_in_dungeon(@location).add_connection([DIRECTION_MAP.key("east")&.to_sym || :east, :cave_tunnel])
 					puts uses["entrance_cave"]
 				else
 					puts uses["default"]
@@ -157,9 +175,9 @@ class Player
 			when "full-waterbag"
 				if @dungeon.find_room_in_dungeon(@location).reference == :start_desert
 					@dungeon.unlock_room
-					@dungeon.find_room_in_dungeon(@location).add_connection([:south, :south_desert])
-					@dungeon.find_room_in_dungeon(@location).add_connection([:east, :east_desert])
-					@dungeon.find_room_in_dungeon(@location).add_connection([:north, :north_desert])
+					@dungeon.find_room_in_dungeon(@location).add_connection([DIRECTION_MAP.key("south")&.to_sym || :south, :south_desert])
+					@dungeon.find_room_in_dungeon(@location).add_connection([DIRECTION_MAP.key("east")&.to_sym || :east, :east_desert])
+					@dungeon.find_room_in_dungeon(@location).add_connection([DIRECTION_MAP.key("north")&.to_sym || :north, :north_desert])
 					puts uses["start_desert"]
 				else
 					puts uses["default"]
@@ -167,11 +185,12 @@ class Player
 			when "driftwood"
 				if @dungeon.find_room_in_dungeon(@location).reference == :riverland
 					puts uses["riverland"]
-					if $stdin.gets.chomp.split(' ').any? {|i| i == "rope"} and !items.select {|i| i.name == "rope"}.empty?
-						@dungeon.find_room_in_dungeon(@location).add_connection([:south, :farmland])
+					rope_name = display_name("rope")
+					if $stdin.gets.chomp.split(' ').any? {|i| i == rope_name} and !items.select {|i| i.name == rope_name}.empty?
+						@dungeon.find_room_in_dungeon(@location).add_connection([DIRECTION_MAP.key("south")&.to_sym || :south, :farmland])
 						@dungeon.find_room_in_dungeon(@location).unlocked = true
-						items.delete_if {|i| i.name == "driftwood"}
-						items.delete_if {|i| i.name == "rope"}
+						items.delete_if {|i| i.name == item_name}
+						items.delete_if {|i| i.name == rope_name}
 						puts uses["riverland_success"]
 					else
 						puts uses["riverland_fail"]
@@ -187,11 +206,12 @@ class Player
 				if @dungeon.find_room_in_dungeon(@location).reference == :riverland
 					puts uses["riverland"]
 					player_answer = $stdin.gets.chomp
-					if player_answer.split(' ').any? {|i| i == "driftwood"} and !items.select {|i| i.name == "driftwood"}.empty?
-						@dungeon.find_room_in_dungeon(@location).add_connection([:south, :farmland])
+					driftwood_name = display_name("driftwood")
+					if player_answer.split(' ').any? {|i| i == driftwood_name} and !items.select {|i| i.name == driftwood_name}.empty?
+						@dungeon.find_room_in_dungeon(@location).add_connection([DIRECTION_MAP.key("south")&.to_sym || :south, :farmland])
 						@dungeon.find_room_in_dungeon(@location).unlocked = true
-						items.delete_if {|i| i.name == "driftwood"}
-						items.delete_if {|i| i.name == "rope"}
+						items.delete_if {|i| i.name == driftwood_name}
+						items.delete_if {|i| i.name == item_name}
 						puts uses["riverland_success"]
 					else
 						puts uses["riverland_fail"]
@@ -207,7 +227,7 @@ class Player
 				if @dungeon.find_room_in_dungeon(@location).reference == :smithy
 					puts uses["smithy"]
 					transforms = uses["transforms_to"]
-					t = items.select {|i| i.name == "blunt-blades"}
+					t = items.select {|i| i.name == item_name}
 					t[0].name = transforms["name"]
 					t[0].description = transforms["description"]
 				else
@@ -217,22 +237,23 @@ class Player
 				if @dungeon.find_room_in_dungeon(@location).reference == :smithy
 					puts uses["smithy"]
 					transforms = uses["transforms_to"]
-					t = items.select {|i| i.name == "horse-armor"}
+					t = items.select {|i| i.name == item_name}
 					t[0].name = transforms["name"]
 					t[0].description = transforms["description"]
 				else
 					puts uses["default"]
 				end
 			when "draconian-armor"
+				talons_name = display_name("huge-talons")
 				if @dungeon.find_room_in_dungeon(@location).reference == :start_mountain_pass
 					puts uses["start_mountain_pass"]
-					items.select {|i| i.name == "draconian-armor"}[0].used = true
-					if !items.select {|i| i.name == "huge-talons"}.empty? #make sure player has item. before testing if its been used.
-						if items.select {|i| i.name == "huge-talons"}[0].used == true
+					items.select {|i| i.name == item_name}[0].used = true
+					if !items.select {|i| i.name == talons_name}.empty? #make sure player has item. before testing if its been used.
+						if items.select {|i| i.name == talons_name}[0].used == true
 							puts uses["start_mountain_pass_combined"] #if player has item and it is used.
-							@dungeon.find_room_in_dungeon(@location).add_connection([:south, :mountain_pass])
-							items.delete_if {|i| i.name == "huge-talons"}
-							items.delete_if {|i| i.name == "draconian-armor"}
+							@dungeon.find_room_in_dungeon(@location).add_connection([DIRECTION_MAP.key("east")&.to_sym || :east, :mountain_pass])
+							items.delete_if {|i| i.name == talons_name}
+							items.delete_if {|i| i.name == item_name}
 							@dungeon.unlock_room
 						else
 							puts uses["start_mountain_pass_not_combined"] #if player has item but has not been used.
@@ -242,15 +263,16 @@ class Player
 					puts uses["default"]
 				end
 			when "huge-talons"
+				armor_name = display_name("draconian-armor")
 				if @dungeon.find_room_in_dungeon(@location).reference == :start_mountain_pass
 					puts uses["start_mountain_pass"]
-					items.select {|i| i.name == "huge-talons"}[0].used = true
-					if !items.select {|i| i.name == "draconian-armor"}.empty? #make sure player has item. before testing if its been used.
-						if items.select {|i| i.name == "draconian-armor"}[0].used == true
+					items.select {|i| i.name == item_name}[0].used = true
+					if !items.select {|i| i.name == armor_name}.empty? #make sure player has item. before testing if its been used.
+						if items.select {|i| i.name == armor_name}[0].used == true
 							puts uses["start_mountain_pass_combined"] #if player has item and it is used.
-							@dungeon.find_room_in_dungeon(@location).add_connection([:south, :mountain_pass])
-							items.delete_if {|i| i.name == "huge-talons"}
-							items.delete_if {|i| i.name == "draconian-armor"}
+							@dungeon.find_room_in_dungeon(@location).add_connection([DIRECTION_MAP.key("east")&.to_sym || :east, :mountain_pass])
+							items.delete_if {|i| i.name == item_name}
+							items.delete_if {|i| i.name == armor_name}
 							@dungeon.unlock_room
 						else
 							puts uses["start_mountain_pass_not_combined"] #if player has item but has not been used.
@@ -371,6 +393,8 @@ puts " "
 puts STORY["messages"]["choose_action"]
 puts STORY["messages"]["separator"]
 input = $stdin.gets.chomp.split(' ')
+# Map the first word (command) to English if needed
+input[0] = COMMAND_MAP[input[0]] || input[0] if input[0]
 while !(input[0] == "exit") #or !(d.find_room_in_dungeon(d.player.location).reference == :home)
 	command = input.shift
 	next if command.nil? || command.empty?
@@ -397,6 +421,7 @@ while !(input[0] == "exit") #or !(d.find_room_in_dungeon(d.player.location).refe
 	if !(d.find_room_in_dungeon(d.player.location).reference == :home) #as long as you're not at the end of the game ask for input again.
 		puts STORY["messages"]["separator"]
 		input = $stdin.gets.chomp.split(' ')
+		input[0] = COMMAND_MAP[input[0]] || input[0] if input[0]
 	else
 		input[0] = "exit"
 	end

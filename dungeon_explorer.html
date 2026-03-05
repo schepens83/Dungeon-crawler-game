@@ -680,8 +680,8 @@
                     const talons = inventory.find(i => i.name === talonsName);
                     if (talons && talons.used) {
                         msg += '\n' + uses.start_mountain_pass_combined;
-                        const south = LANG === 'nl' ? 'zuid' : 'south';
-                        rooms[currentRoom].connections[south] = 'mountain_pass';
+                        const east = LANG === 'nl' ? 'oost' : 'east';
+                        rooms[currentRoom].connections[east] = 'mountain_pass';
                         inventory = inventory.filter(i => i.name !== talonsName && i.name !== itemName);
                         rooms[currentRoom].unlocked = true;
                     } else if (talons) {
@@ -703,8 +703,8 @@
                     const armor = inventory.find(i => i.name === armorName);
                     if (armor && armor.used) {
                         msg += '\n' + uses.start_mountain_pass_combined;
-                        const south = LANG === 'nl' ? 'zuid' : 'south';
-                        rooms[currentRoom].connections[south] = 'mountain_pass';
+                        const east = LANG === 'nl' ? 'oost' : 'east';
+                        rooms[currentRoom].connections[east] = 'mountain_pass';
                         inventory = inventory.filter(i => i.name !== armorName && i.name !== itemName);
                         rooms[currentRoom].unlocked = true;
                     } else if (armor) {

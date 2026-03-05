@@ -24,7 +24,7 @@
     "hilly_country": {
       "name": "Hilly Country",
       "descriptions": {
-        "locked": "A lovely trail meanders up and down through forests and hils in front of you. As you continue to walk, you snap out of your daydreams when you notice many footprints on the trail. It appears a large group of people have recently moved through this area. As you continue to walk, you find they dropped some small items besides the road. Unfortunately most of them are useless.",
+        "locked": "A lovely trail meanders up and down through forests and hills in front of you. As you continue to walk, you snap out of your daydreams when you notice many footprints on the trail. It appears a large group of people have recently moved through this area. As you continue to walk, you find they dropped some small items besides the road. Unfortunately most of them are useless.",
         "unlocked": null
       },
       "connections": { "north": "canyon", "west": "small_town" },
@@ -221,7 +221,7 @@
         "locked": "Carefully you crouch beside one of the last trees before the large and open plain of the pass. You see six of them circling directly above you, which probably means they've spotted you. Griphons are not known for their intelligence, but they are pack animals and their instincts for hunting are excellent. Being in the air means they have the advantage of choosing the battleground, which will probably be out in the open where they can come from all sides. You prefer to have the initiative though and even though you feel confident, you decide to wait till darkness sets in. Griphons's nightsight is equal to your own, but the night is dark tonight and they will need to fly low or risk losing you. \n\nYou slowly walk out the forest and look up. The sliver of the moon is invisible behind thick dark clouds. The effect is somewhat diminished by the whiteness of the snow, brightening the night. It will have to do. Non of the beasts nearby as far as you can make out though. Carefully you set out. \n\nWhen you hear the screech hours later, you almost thought you had gotten rid of them. You crouch down and look up towards the sound. Three of them are flying low about 50 meters from your right. They fly parralel to you and are not preparing to attack. That doesn't make sense. Why alert you and give time to ... You get hit sideways by some large weigth. Instinctively you crouch and try to lower your point of gravity but your reaction was late and you find yourself falling sideways. As you do so however, you wip around your tail and are rewarded by solid contact and a pained screech. You manage to grab hold and are pulled up by the griphon trying to get away. The two others that were right behind, suddenly like their situation much less and try to change their collision course. Using the momentum gained by your tail action, you swing your body towards the closest of the two trailing and manage to make a solid connection with one of its wings. Screeching and whimpering...",
         "unlocked": null
       },
-      "connections": { "west": "home" },
+      "connections": { "west": "start_mountain_pass", "east": "home" },
       "items": []
     },
     "canyon_topside": {
@@ -250,7 +250,7 @@
         "locked": "Cheerfully you climb the wide circling hallway up to your lair. The emperors ancestors had this especially made for your lineage. As you round the top you hear the cheers of joy and surprise as your young hatchlings see you. Calling out with joy they run and jump on top of you. Laughing, you let them and start playfully tossing them around. Later, there will be time to give report to the emperor of your destruction of the human and elven rebellion. For now you enjoy the simple play of your family.\n\n\n\n",
         "unlocked": null
       },
-      "connections": { "north": "start_mountain_pass" },
+      "connections": { "west": "mountain_pass" },
       "items": []
     }
   },
