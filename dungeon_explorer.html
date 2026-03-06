@@ -7,12 +7,16 @@
     <style>
         :root {
             --bg-color: #0a0a0a;
-            --panel-color: #161616;
+            --panel-color: #131313;
             --text-color: #c9b991;
             --accent-color: #7a0000;
-            --border-color: #333;
+            --border-color: #2e2e2e;
             --highlight-color: #c5a059;
+            --feedback-bg: rgba(122, 0, 0, 0.12);
+            --image-height: 200px;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
@@ -21,17 +25,16 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            height: 100dvh;
             overflow: hidden;
+            font-size: 1rem;
         }
 
+        /* ── Scene image ── */
         #scene-visualization {
-            flex: 0 0 55%;
+            flex: 0 0 var(--image-height);
             background: #000;
             border-bottom: 2px solid var(--accent-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
             overflow: hidden;
         }
@@ -40,7 +43,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
+            object-position: center top;
             display: none;
             animation: fadeIn 0.8s ease-in-out;
         }
@@ -48,22 +51,29 @@
         #scene-image.loaded { display: block; }
 
         #scene-placeholder {
-            font-size: 0.7rem;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
             letter-spacing: 0.3rem;
             color: #333;
             animation: pulse 3s infinite;
-            position: absolute;
         }
 
-        #scene-image.loaded + #scene-placeholder { display: none; }
+        #scene-image.loaded ~ #scene-placeholder { display: none; }
 
         @keyframes pulse { 0% { opacity: 0.2; } 50% { opacity: 0.5; } 100% { opacity: 0.2; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
+        /* ── Narrative / room text ── */
         #narrative-container {
             flex: 1;
-            padding: 30px;
             overflow-y: auto;
-            background-image: radial-gradient(circle at center, #161616 0%, #0a0a0a 100%);
+            background-image: radial-gradient(ellipse at center, #181818 0%, #0a0a0a 100%);
             scrollbar-width: thin;
             scrollbar-color: var(--accent-color) var(--bg-color);
             display: flex;
@@ -71,112 +81,319 @@
         }
 
         .scene-content {
-            max-width: 800px;
+            max-width: 720px;
+            width: 100%;
             margin: 0 auto;
-            line-height: 1.7;
-            animation: fadeIn 0.6s ease-in-out;
-            padding-bottom: 40px;
+            padding: 24px 20px 20px;
+            line-height: 1.75;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         .room-name {
-            font-size: 1.6rem;
-            color: var(--highlight-color);
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--accent-color);
             display: block;
-            padding-bottom: 10px;
+            font-size: 1.5rem;
+            color: var(--highlight-color);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-align: center;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--accent-color);
         }
 
-        .action-feedback {
-            color: #888;
+        .room-description {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        .items-found {
+            margin-top: 18px;
+            padding: 12px 16px;
+            background: rgba(197, 160, 89, 0.07);
+            border-left: 2px solid var(--highlight-color);
+            border-radius: 2px;
+            font-size: 1rem;
+        }
+
+        /* ── Feedback box ── */
+        #feedback-box {
+            max-width: 720px;
+            width: 100%;
+            margin: 0 auto 0;
+            padding: 0 20px 20px;
+        }
+
+        #action-feedback {
+            background: var(--feedback-bg);
+            border: 1px solid rgba(122, 0, 0, 0.4);
+            border-radius: 4px;
+            padding: 14px 18px;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #b8a880;
             font-style: italic;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-size: 0.9rem;
-            min-height: 1.2rem;
+            min-height: 56px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #action-feedback.visible { display: block; }
 
+        /* ── Action panel (bottom) ── */
         #action-panel {
             background-color: var(--panel-color);
-            padding: 15px;
-            display: grid;
-            grid-template-columns: 1fr 1.5fr 1fr;
-            gap: 15px;
-            height: 170px;
             border-top: 2px solid var(--accent-color);
-            box-sizing: border-box;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             z-index: 10;
         }
 
-        .action-group { display: flex; flex-direction: column; gap: 8px; justify-content: flex-start; }
+        #action-panel-row1 {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
 
+        /* Navigation compass */
+        #nav-section {
+            flex: 0 0 auto;
+        }
+
+        .panel-label {
+            font-size: 0.6rem;
+            letter-spacing: 1.5px;
+            color: #555;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        #nav-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 48px);
+            grid-template-rows: repeat(2, 44px);
+            gap: 6px;
+            width: fit-content;
+        }
+
+        .btn-north { grid-column: 2; grid-row: 1; }
+        .btn-west  { grid-column: 1; grid-row: 2; }
+        .btn-south { grid-column: 2; grid-row: 2; }
+        .btn-east  { grid-column: 3; grid-row: 2; }
+
+        /* Interaction actions */
+        #interaction-section {
+            flex: 1;
+            min-width: 0;
+        }
+
+        #dynamic-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* ── Inventory ── */
+        #inventory-section {
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
+
+        #inventory-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 110px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) transparent;
+        }
+
+        #inventory-empty {
+            font-size: 0.85rem;
+            color: #444;
+            font-style: italic;
+            padding: 4px 2px;
+            display: block;
+        }
+
+        .inv-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+        }
+
+        .inv-item-name {
+            flex: 1;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .inv-btn {
+            flex: 0 0 auto;
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            min-width: 0;
+        }
+
+        /* ── Shared button styles ── */
         button {
             background-color: #111;
             border: 1px solid var(--border-color);
             color: var(--text-color);
-            padding: 10px;
+            padding: 0 12px;
+            height: 44px;
+            min-height: 44px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background-color 0.15s, border-color 0.15s, color 0.15s;
             font-family: inherit;
             text-transform: uppercase;
-            font-size: 0.65rem;
+            font-size: 0.75rem;
             letter-spacing: 1px;
+            border-radius: 2px;
+            touch-action: manipulation;
         }
 
-        button:hover:not(:disabled) {
+        #nav-grid button {
+            padding: 0;
+            width: 48px;
+            height: 44px;
+        }
+
+        button:hover:not(:disabled),
+        button:active:not(:disabled) {
             background-color: var(--accent-color);
             border-color: var(--highlight-color);
             color: white;
         }
 
-        button:disabled { opacity: 0.05; cursor: not-allowed; border-color: #222; }
+        button:disabled {
+            opacity: 0.08;
+            cursor: not-allowed;
+            border-color: #1a1a1a;
+        }
 
-        #nav-grid { display: grid; grid-template-columns: repeat(3, 42px); grid-template-rows: repeat(2, 42px); gap: 8px; width: fit-content; margin: 0 auto; }
-        .btn-north { grid-column: 2; }
-        .btn-west { grid-column: 1; grid-row: 2; }
-        .btn-south { grid-column: 2; grid-row: 2; }
-        .btn-east { grid-column: 3; grid-row: 2; }
+        /* ── Overlays ── */
+        .loading-overlay {
+            position: fixed; inset: 0;
+            background: black;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 1000;
+        }
 
-        #inventory-list { font-size: 0.75rem; height: 90px; overflow-y: auto; border: 1px solid #222; padding: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; color: #888; }
-
-        .inv-item { display: flex; gap: 4px; align-items: center; margin-bottom: 3px; }
-        .inv-item-name { flex: 1; }
-        .inv-btn { padding: 2px 6px; font-size: 0.55rem; min-width: 0; }
-
-        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: black; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
-        .spinner { width: 40px; height: 40px; border: 2px solid #111; border-top: 2px solid var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 2px solid #111;
+            border-top: 2px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
 
         #lang-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: black; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 1001; gap: 20px;
+            position: fixed; inset: 0;
+            background: black;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 1001; gap: 20px;
         }
-        #lang-overlay h1 { color: var(--highlight-color); font-size: 1.8rem; letter-spacing: 4px; margin-bottom: 20px; }
-        .lang-btn { padding: 15px 40px; font-size: 1rem; letter-spacing: 2px; min-width: 200px; }
+
+        #lang-overlay h1 {
+            color: var(--highlight-color);
+            font-size: 2rem;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn {
+            padding: 0 40px;
+            height: 56px;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            min-width: 220px;
+        }
 
         #name-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: black; display: none; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 1001; gap: 15px;
+            position: fixed; inset: 0;
+            background: black;
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 1001; gap: 15px;
         }
-        #name-overlay label { color: var(--highlight-color); font-size: 1rem; letter-spacing: 2px; }
-        #name-input { background: #111; border: 1px solid var(--border-color); color: var(--text-color); padding: 10px 20px; font-family: inherit; font-size: 1rem; text-align: center; width: 250px; }
+
+        #name-overlay label {
+            color: var(--highlight-color);
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+
+        #name-input {
+            background: #111;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 20px;
+            font-family: inherit;
+            font-size: 1.1rem;
+            text-align: center;
+            width: 280px;
+            border-radius: 2px;
+        }
+
         #name-input:focus { outline: none; border-color: var(--highlight-color); }
 
         #combine-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); display: none; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 1001; gap: 10px;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 1001; gap: 16px;
+            padding: 24px;
         }
-        #combine-overlay p { color: var(--highlight-color); font-size: 0.9rem; letter-spacing: 1px; }
-        #combine-items { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-        #combine-items button { padding: 10px 20px; }
+
+        #combine-overlay p {
+            color: var(--highlight-color);
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        #combine-items {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #combine-items button { padding: 0 24px; height: 48px; }
+
+        /* ── Desktop layout ── */
+        @media (min-width: 640px) {
+            :root { --image-height: 240px; }
+
+            .scene-content { padding: 28px 32px 20px; }
+            #feedback-box { padding: 0 32px 24px; }
+
+            #action-panel {
+                padding: 16px 24px;
+                gap: 14px;
+            }
+
+            #inventory-list { max-height: 130px; }
+        }
+
+        @media (min-width: 900px) {
+            :root { --image-height: 280px; }
+        }
     </style>
 </head>
 <body>
@@ -206,33 +423,37 @@
 
     <div id="scene-visualization">
         <img id="scene-image" alt="Scene">
-        <span id="scene-placeholder">VISUALIZING SCENE...</span>
+        <div id="scene-placeholder">VISUALIZING SCENE...</div>
     </div>
 
     <div id="narrative-container">
-        <div id="action-feedback" class="action-feedback"></div>
         <div id="scene-text" class="scene-content"></div>
+        <div id="feedback-box">
+            <div id="action-feedback"></div>
+        </div>
     </div>
 
     <div id="action-panel">
-        <div class="action-group">
-            <div id="nav-label" style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">NAVIGATION</div>
-            <div id="nav-grid">
-                <button class="btn-north" id="btn-north" disabled>N</button>
-                <button class="btn-west" id="btn-west" disabled>W</button>
-                <button class="btn-south" id="btn-south" disabled>S</button>
-                <button class="btn-east" id="btn-east" disabled>E</button>
+        <div id="action-panel-row1">
+            <div id="nav-section">
+                <div class="panel-label" id="nav-label">NAVIGATION</div>
+                <div id="nav-grid">
+                    <button class="btn-north" id="btn-north" disabled>N</button>
+                    <button class="btn-west"  id="btn-west"  disabled>W</button>
+                    <button class="btn-south" id="btn-south" disabled>S</button>
+                    <button class="btn-east"  id="btn-east"  disabled>E</button>
+                </div>
+            </div>
+
+            <div id="interaction-section">
+                <div class="panel-label" id="interaction-label">INTERACTION</div>
+                <div id="dynamic-actions"></div>
             </div>
         </div>
 
-        <div class="action-group">
-            <div id="interaction-label" style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">INTERACTION</div>
-            <div id="dynamic-actions" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 5px;"></div>
-        </div>
-
-        <div class="action-group">
-            <div id="backpack-label" style="text-align: center; font-size: 0.55rem; color: #444; margin-bottom: 5px; letter-spacing: 1px;">BACKPACK</div>
-            <div id="inventory-list"></div>
+        <div id="inventory-section">
+            <div class="panel-label" id="backpack-label">BACKPACK</div>
+            <div id="inventory-list"><span id="inventory-empty"></span></div>
         </div>
     </div>
 
@@ -402,13 +623,13 @@
         // Scene text
         let desc = room.unlocked && room.descriptions.unlocked ? room.descriptions.unlocked : room.descriptions.locked;
         let html = "<span class='room-name'>" + room.name + "</span>";
-        if (room.unlocked && room.descriptions.unlocked) html += "********<br>";
-        html += (desc || '').split('\n').join('<br>');
+        html += "<div class='room-description'>" + (desc || '').split('\n').join('<br>') + "</div>";
         if (room.items.length > 0) {
-            html += "<br><br><span style='color: #c5a059; font-weight: bold;'>" + L('youSee') + "</span>";
-            html += room.items.map(i => i.name).join(', ');
+            html += "<div class='items-found'><span style='color: var(--highlight-color); font-weight: bold;'>" + L('youSee') + "</span>" + room.items.map(i => i.name).join(', ') + "</div>";
         }
         document.getElementById('scene-text').innerHTML = html;
+        // Clear feedback when entering new room
+        setFeedback('');
         document.getElementById('narrative-container').scrollTop = 0;
 
         // Image
@@ -448,14 +669,18 @@
 
     function updateInventoryUI() {
         const list = document.getElementById('inventory-list');
+        list.innerHTML = '';
         if (inventory.length === 0) {
-            list.textContent = L('empty');
+            const empty = document.createElement('span');
+            empty.id = 'inventory-empty';
+            empty.textContent = L('empty');
+            list.appendChild(empty);
             return;
         }
-        list.innerHTML = '';
         for (const item of inventory) {
             const div = document.createElement('div');
             div.className = 'inv-item';
+
             const nameSpan = document.createElement('span');
             nameSpan.className = 'inv-item-name';
             nameSpan.textContent = item.name;
@@ -487,7 +712,14 @@
     }
 
     function setFeedback(text) {
-        document.getElementById('action-feedback').innerHTML = text ? text.split('\n').join('<br>') : '';
+        const el = document.getElementById('action-feedback');
+        if (text) {
+            el.innerHTML = text.split('\n').join('<br>');
+            el.classList.add('visible');
+        } else {
+            el.innerHTML = '';
+            el.classList.remove('visible');
+        }
     }
 
     // ====== SAVE / LOAD ======
