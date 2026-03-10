@@ -142,25 +142,25 @@
             line-height: 1.6;
         }
 
-        #action-feedback {
-            margin-top: 8px;
+        #action-result {
+            margin-top: 6px;
+            padding: 7px 10px;
             background: rgba(122, 0, 0, 0.14);
             border: 1px solid rgba(122, 0, 0, 0.30);
             border-radius: 6px;
-            padding: 9px 12px;
             font-size: 0.82rem;
             line-height: 1.6;
-            color: #b8a880;
+            color: #d4c4a0;
             font-style: italic;
             display: none;
-            max-height: 140px;
+            max-height: 120px;
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: var(--accent) transparent;
             animation: slideIn 0.3s ease-out;
         }
 
-        #action-feedback.visible { display: block; }
+        #action-result.visible { display: block; }
 
         /* ══ Glass action panel ══ */
         #action-panel {
@@ -189,7 +189,7 @@
         .panel-label {
             font-size: 0.54rem;
             letter-spacing: 2px;
-            color: rgba(255,255,255,0.20);
+            color: rgba(197, 160, 89, 0.55);
             text-transform: uppercase;
             margin-bottom: 5px;
             text-align: center;
@@ -409,7 +409,6 @@
             :root { --image-reveal: 40vh; }
             #room-name-overlay { font-size: 1.75rem; letter-spacing: 6px; }
             .scene-content { padding: 22px 32px 18px; }
-            #feedback-box  { padding: 0 32px 22px; }
             #action-panel  { padding: 12px 28px calc(16px + env(safe-area-inset-bottom, 0px)); }
             #nav-grid {
                 grid-template-columns: repeat(3, 44px);
@@ -487,7 +486,7 @@
             <div id="interaction-section">
                 <div class="panel-label" id="interaction-label">INTERACTION</div>
                 <div id="dynamic-actions"></div>
-                <div id="action-feedback"></div>
+                <div id="action-result"></div>
             </div>
         </div>
 
@@ -741,9 +740,9 @@
     }
 
     function setFeedback(text) {
-        const el = document.getElementById('action-feedback');
+        const el = document.getElementById('action-result');
         if (text) {
-            el.innerHTML = text.split('\n').join('<br>');
+            el.innerHTML = text.trim().split('\n').join('<br>');
             el.classList.add('visible');
         } else {
             el.innerHTML = '';
@@ -810,9 +809,10 @@
             return;
         }
 
-        const uses = STORY.item_uses[itemName] || {};
-        const locRef = currentRoom;
         const internal = internalName(itemName);
+        const canonicalDisplay = ITEM_DISPLAY_MAP[internal] || itemName;
+        const uses = STORY.item_uses[itemName] || STORY.item_uses[canonicalDisplay] || {};
+        const locRef = currentRoom;
 
         switch (internal) {
             case 'crocodile-teeth':
