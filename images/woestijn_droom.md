@@ -1,0 +1,4 @@
+# Scene: Noord-Oostelijke Woestijn (Droom)
+
+**Nano Banana 2 Prompt:**
+Surreal dreamscape on a cold desert night, blue moonlight washing over sand dunes. Superimposed translucently over the landscape, a spectral vision of a grand imperial throne room shimmers — massive tapestries hang in the air above the sand, one depicting a large four-legged reptilian beast without any wings, completely wingless, carrying a rider on its back as it charges into a regiment. The beast has NO wings whatsoever. Small ghostly shapes of playful dragon hatchlings scurry across the dune crests as if chasing each other in a castle courtyard. In the foreground bottom of the frame, a small realistic lizard slides into its burrow in the sand, bridging dream and reality. The double-exposure effect blends cold desert blues with warm golden throne-room candlelight. Ethereal and melancholy atmosphere, the vision already fading at its edges.

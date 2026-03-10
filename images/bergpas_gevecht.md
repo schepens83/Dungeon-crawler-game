@@ -1,0 +1,4 @@
+# Scene: De Oostelijke Bergpas (Gevecht)
+
+**Nano Banana 2 Prompt:**
+First-person ground-level combat view in a snow-covered mountain pass at night under a faint sliver of moon behind dark clouds. No humans anywhere. Only griffons as enemies. Six large griffons attack from all sides, one lunging straight at the camera with talons extended, another mid-fall with a broken wing trailing feathers through the snow. At the bottom-right edge of the frame, extending from the viewer's own body, a massive armored hand with razor-sharp iron talons swipes at an incoming griffon. At the very bottom edge of the frame, the viewer's own thick powerful armored tail extends forward into the scene, whipping in a wide arc to strike a griffon. Snow flies in all directions, feathers and blood in the cold air. High contrast between the white snow, dark night sky, and the violent motion of battle. Dynamic first-person composition — the viewer IS the combatant.

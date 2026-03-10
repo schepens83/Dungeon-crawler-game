@@ -1,0 +1,4 @@
+# Scene: Klein Stadje (Ruïnes)
+
+**Nano Banana 2 Prompt:**
+Same eye-level view through the town gate, but now the scene is devastation. The wooden entrance sign hangs scorched and splintered from one chain. Blackened skeletons of cottages line the street, wisps of grey smoke still curling from charred beams. Ash and debris litter the cobblestones where handcarts once stood. In the center of the square, the dolphin fountain remains intact and still flowing, surrounded by a ring of rubble and soot — a strange island of beauty in the destruction. The grand mansion at the head of the square still stands, its facade strangely untouched by fire, its heavy oak door still shut. Dark oppressive atmosphere with a palette of charcoal blacks, ash grey, and ember orange, the fountain clean water providing a melancholy accent.

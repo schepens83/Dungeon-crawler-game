@@ -1,0 +1,4 @@
+# Scene: Drakenhol (Thuis)
+
+**Nano Banana 2 Prompt:**
+First-person perspective through the eyes of the returning hero, looking down a wide spiraling stone hallway inside a grand mountain lair with high vaulted ceilings carved from living rock. Warm torchlight from many wall-mounted torches illuminates the ancient stone. Running excitedly toward the viewer, several young playful dragon hatchlings with iridescent scales stumble over each other in joy — small claws clicking on the stone floor, tiny wings flapping, mouths open in happy calls. The hatchlings are varied in color but all small and young, their scales catching the torchlight in rainbow flashes. No armor is visible — the father has come home and removed his battle gear. Grand heartwarming homecoming atmosphere, warm golden torch-orange light flooding the scene.

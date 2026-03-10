@@ -1,0 +1,4 @@
+# Scene: Betoverd Bos (Ritueel)
+
+**Nano Banana 2 Prompt:**
+Wide establishing shot of a strangely circular forest clearing ringed by silver-barked trees with luminous pale moss growing up their trunks. At the entrance stands a beautiful stone archway carved with lifelike elven statues in flowing robes, their delicate features catching dappled light. In the center of the clearing, a small stone shrine holds the tiny sacrificial body of a squirrel, dark stains on the altar stone. Nearby, several elves lie slumped on the forest floor in a drunken stupor around a large leather drinking bag, their fine clothing soiled. Ethereal silver-green light filters through the canopy, creating an atmosphere that mixes mystical beauty with grotesque repulsion. Deep forest blacks, silver bark accents, and sickly moss-green tones.

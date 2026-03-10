@@ -1,0 +1,4 @@
+# Scene: Groot Dorp (Smederij)
+
+**Nano Banana 2 Prompt:**
+Interior of a medieval village smithy lit by the roaring bright orange glow of a large forge. A muscular human blacksmith works at the anvil, sweat gleaming on his brow, while his small children peek fearfully from behind a heavy wooden door in the background. On the anvil, the smith is reworking massive metal plates — transforming heavy horse armor into custom plate mail far larger than any horse would need, shaped for a different anatomy entirely. In the foreground, resting on the workbench, a massive limb covered in dark tough scales with long sharp claws extends into frame — clearly not a human arm. The empty streets of the fortified village are visible through the smithy entrance. High contrast warm forge-light against deep shadows, dark granite and iron-orange palette.

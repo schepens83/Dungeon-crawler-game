@@ -1,0 +1,4 @@
+# Scene: Klein Stadje (Spookstad)
+
+**Nano Banana 2 Prompt:**
+Eye-level view through the open gate of an abandoned medieval town into a silent square. A weathered wooden sign at the gate reads "STA VERENIGD TEGEN HET RIJK" with "POP: 206" below it, smaller numbers crossed out multiple times. Beyond the gate, handcarts sit abandoned in the cobblestone street and shutters hang open on empty houses. In the center of the square, a stone fountain with carved dolphin statues spews clear water into a basin, its gentle splash the only sound. At the head of the square looms a grand mansion with a heavy reinforced oak door shut tight, its facade imposing and untouched. Cinematic midday light floods the square, casting sharp shadows. Muted grey stone and warm ochre palette with cool blue water as accent.
