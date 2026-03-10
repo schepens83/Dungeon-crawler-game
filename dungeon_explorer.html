@@ -3,52 +3,63 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dungeon Crawler - Explorer</title>
+    <title>Dungeon Crawler</title>
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --panel-color: #131313;
-            --text-color: #c9b991;
-            --accent-color: #7a0000;
-            --border-color: #2e2e2e;
-            --highlight-color: #c5a059;
-            --feedback-bg: rgba(122, 0, 0, 0.12);
-            --image-height: 200px;
+            --accent: #7a0000;
+            --gold: #c5a059;
+            --text: #c9b991;
+            --glass-bg: rgba(5, 5, 5, 0.58);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --panel-bg: rgba(3, 3, 3, 0.72);
+            --image-reveal: 32vh;
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
             font-family: "Georgia", serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
+            color: var(--text);
             height: 100dvh;
             overflow: hidden;
-            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            background: #000;
         }
 
-        /* ── Scene image ── */
+        /* ══ Full-screen background image ══ */
         #scene-visualization {
-            flex: 0 0 var(--image-height);
-            background: #000;
-            border-bottom: 2px solid var(--accent-color);
-            position: relative;
-            overflow: hidden;
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: #050505;
         }
 
         #scene-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center top;
+            object-position: center;
             display: none;
-            animation: fadeIn 0.8s ease-in-out;
+            animation: fadeIn 1s ease-in-out;
         }
 
         #scene-image.loaded { display: block; }
+
+        /* Atmospheric vignette — heavy at bottom for text legibility */
+        #scene-visualization::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.08) 0%,
+                rgba(0,0,0,0.04) 20%,
+                rgba(0,0,0,0.55) 58%,
+                rgba(0,0,0,0.96) 100%
+            );
+            pointer-events: none;
+        }
 
         #scene-placeholder {
             position: absolute;
@@ -56,99 +67,114 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.65rem;
-            letter-spacing: 0.3rem;
+            font-size: 0.6rem;
+            letter-spacing: 3px;
             color: #333;
             animation: pulse 3s infinite;
+            z-index: 1;
         }
 
         #scene-image.loaded ~ #scene-placeholder { display: none; }
 
-        @keyframes pulse { 0% { opacity: 0.2; } 50% { opacity: 0.5; } 100% { opacity: 0.2; } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+        /* ══ Transparent image spacer ══ */
+        #image-spacer {
+            flex: 0 0 var(--image-reveal);
+            position: relative;
+            z-index: 1;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding-bottom: 16px;
+        }
 
-        /* ── Narrative / room text ── */
+        /* Room name floats over the image */
+        #room-name-overlay {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow:
+                0 1px 0 rgba(0,0,0,0.9),
+                0 2px 24px rgba(0,0,0,0.95),
+                0 0 50px rgba(0,0,0,0.6);
+            padding: 0 20px;
+            animation: fadeIn 0.7s ease-in-out;
+        }
+
+        /* ══ Glass narrative panel ══ */
         #narrative-container {
             flex: 1;
             overflow-y: auto;
-            background-image: radial-gradient(ellipse at center, #181818 0%, #0a0a0a 100%);
+            position: relative;
+            z-index: 1;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            border-radius: 14px 14px 0 0;
             scrollbar-width: thin;
-            scrollbar-color: var(--accent-color) var(--bg-color);
-            display: flex;
-            flex-direction: column;
+            scrollbar-color: var(--accent) transparent;
         }
 
         .scene-content {
-            max-width: 720px;
+            max-width: 680px;
             width: 100%;
             margin: 0 auto;
-            padding: 24px 20px 20px;
-            line-height: 1.75;
+            padding: 18px 20px 14px;
             animation: fadeIn 0.5s ease-in-out;
         }
 
-        .room-name {
-            display: block;
-            font-size: 1.5rem;
-            color: var(--highlight-color);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-align: center;
-            padding-bottom: 12px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--accent-color);
-        }
-
         .room-description {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: var(--text-color);
+            font-size: 1rem;
+            line-height: 1.85;
+            color: var(--text);
         }
 
         .items-found {
-            margin-top: 18px;
-            padding: 12px 16px;
+            margin-top: 16px;
+            padding: 11px 15px;
             background: rgba(197, 160, 89, 0.07);
-            border-left: 2px solid var(--highlight-color);
-            border-radius: 2px;
-            font-size: 1rem;
-        }
-
-        /* ── Feedback box ── */
-        #feedback-box {
-            max-width: 720px;
-            width: 100%;
-            margin: 0 auto 0;
-            padding: 0 20px 20px;
+            border-left: 2px solid var(--gold);
+            border-radius: 0 4px 4px 0;
+            font-size: 0.92rem;
+            line-height: 1.6;
         }
 
         #action-feedback {
-            background: var(--feedback-bg);
-            border: 1px solid rgba(122, 0, 0, 0.4);
-            border-radius: 4px;
-            padding: 14px 18px;
-            font-size: 1rem;
-            line-height: 1.7;
+            margin-top: 8px;
+            background: rgba(122, 0, 0, 0.14);
+            border: 1px solid rgba(122, 0, 0, 0.30);
+            border-radius: 6px;
+            padding: 9px 12px;
+            font-size: 0.82rem;
+            line-height: 1.6;
             color: #b8a880;
             font-style: italic;
-            min-height: 56px;
             display: none;
+            max-height: 140px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) transparent;
             animation: slideIn 0.3s ease-out;
         }
 
         #action-feedback.visible { display: block; }
 
-        /* ── Action panel (bottom) ── */
+        /* ══ Glass action panel ══ */
         #action-panel {
-            background-color: var(--panel-color);
-            border-top: 2px solid var(--accent-color);
-            padding: 14px 16px;
+            flex: 0 0 auto;
+            position: relative;
+            z-index: 2;
+            background: var(--panel-bg);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-top: 1px solid var(--glass-border);
+            padding: 11px 14px calc(14px + env(safe-area-inset-bottom, 0px));
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            z-index: 10;
+            gap: 9px;
         }
 
         #action-panel-row1 {
@@ -157,34 +183,43 @@
             align-items: flex-start;
         }
 
-        /* Navigation compass */
-        #nav-section {
-            flex: 0 0 auto;
-        }
+        /* ══ Compass ══ */
+        #nav-section { flex: 0 0 auto; }
 
         .panel-label {
-            font-size: 0.6rem;
-            letter-spacing: 1.5px;
-            color: #555;
+            font-size: 0.54rem;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.20);
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             text-align: center;
         }
 
         #nav-grid {
             display: grid;
-            grid-template-columns: repeat(3, 48px);
-            grid-template-rows: repeat(2, 44px);
-            gap: 6px;
-            width: fit-content;
+            grid-template-columns: repeat(3, 40px);
+            grid-template-rows: repeat(3, 36px);
+            gap: 3px;
         }
 
-        .btn-north { grid-column: 2; grid-row: 1; }
-        .btn-west  { grid-column: 1; grid-row: 2; }
-        .btn-south { grid-column: 2; grid-row: 2; }
-        .btn-east  { grid-column: 3; grid-row: 2; }
+        .btn-north  { grid-column: 2; grid-row: 1; }
+        .btn-west   { grid-column: 1; grid-row: 2; }
+        .btn-east   { grid-column: 3; grid-row: 2; }
+        .btn-south  { grid-column: 2; grid-row: 3; }
 
-        /* Interaction actions */
+        .compass-center {
+            grid-column: 2;
+            grid-row: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(197, 160, 89, 0.22);
+            font-size: 0.72rem;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* ══ Interaction ══ */
         #interaction-section {
             flex: 1;
             min-width: 0;
@@ -193,246 +228,249 @@
         #dynamic-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
-        /* ── Inventory ── */
+        /* ══ Inventory ══ */
         #inventory-section {
-            border-top: 1px solid var(--border-color);
-            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding-top: 8px;
         }
 
         #inventory-list {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-height: 110px;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 5px;
+            max-height: 80px;
             overflow-y: auto;
             scrollbar-width: thin;
-            scrollbar-color: var(--accent-color) transparent;
+            scrollbar-color: var(--accent) transparent;
         }
 
         #inventory-empty {
-            font-size: 0.85rem;
-            color: #444;
+            font-size: 0.80rem;
+            color: rgba(255,255,255,0.18);
             font-style: italic;
-            padding: 4px 2px;
-            display: block;
         }
 
         .inv-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 6px 10px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border-color);
-            border-radius: 3px;
+            gap: 5px;
+            padding: 4px 9px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 4px;
         }
 
         .inv-item-name {
-            flex: 1;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .inv-btn {
-            flex: 0 0 auto;
-            padding: 5px 10px;
-            font-size: 0.7rem;
-            min-width: 0;
+            padding: 3px 7px;
+            font-size: 0.62rem;
+            height: 26px;
+            min-height: 26px;
         }
 
-        /* ── Shared button styles ── */
+        /* ══ Buttons ══ */
         button {
-            background-color: #111;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            color: var(--text);
             padding: 0 12px;
-            height: 44px;
-            min-height: 44px;
+            height: 38px;
+            min-height: 38px;
             cursor: pointer;
-            transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+            transition: background 0.12s, border-color 0.12s, color 0.12s, box-shadow 0.12s;
             font-family: inherit;
             text-transform: uppercase;
-            font-size: 0.75rem;
+            font-size: 0.70rem;
             letter-spacing: 1px;
-            border-radius: 2px;
+            border-radius: 4px;
             touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         #nav-grid button {
             padding: 0;
-            width: 48px;
-            height: 44px;
+            width: 40px;
+            height: 36px;
+            min-height: 36px;
+            font-size: 0.80rem;
+            font-weight: bold;
         }
 
         button:hover:not(:disabled),
         button:active:not(:disabled) {
-            background-color: var(--accent-color);
-            border-color: var(--highlight-color);
-            color: white;
+            background: var(--accent);
+            border-color: rgba(197, 160, 89, 0.45);
+            color: #fff;
+            box-shadow: 0 0 14px rgba(122, 0, 0, 0.40);
         }
 
         button:disabled {
-            opacity: 0.08;
+            opacity: 0.10;
             cursor: not-allowed;
-            border-color: #1a1a1a;
         }
 
-        /* ── Overlays ── */
-        .loading-overlay {
-            position: fixed; inset: 0;
-            background: black;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+        /* Enabled nav buttons have golden tint */
+        #nav-grid button:not(:disabled) {
+            background: rgba(197, 160, 89, 0.07);
+            border-color: rgba(197, 160, 89, 0.22);
+            color: var(--gold);
+        }
+
+        /* ══ Overlays ══ */
+        .full-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.96);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             z-index: 1000;
+            gap: 16px;
+            padding: 32px 24px;
         }
 
-        .spinner {
-            width: 40px; height: 40px;
-            border: 2px solid #111;
-            border-top: 2px solid var(--accent-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .full-overlay h1 {
+            color: var(--gold);
+            font-size: 1.9rem;
+            letter-spacing: 6px;
+            text-align: center;
+            margin-bottom: 12px;
         }
 
-        #lang-overlay {
-            position: fixed; inset: 0;
-            background: black;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 1001; gap: 20px;
-        }
-
-        #lang-overlay h1 {
-            color: var(--highlight-color);
-            font-size: 2rem;
-            letter-spacing: 4px;
-            margin-bottom: 20px;
+        .full-overlay label {
+            color: var(--gold);
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-align: center;
         }
 
         .lang-btn {
             padding: 0 40px;
-            height: 56px;
-            font-size: 1rem;
-            letter-spacing: 2px;
+            height: 54px;
+            font-size: 0.95rem;
+            letter-spacing: 3px;
             min-width: 220px;
         }
 
-        #name-overlay {
-            position: fixed; inset: 0;
-            background: black;
-            display: none; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 1001; gap: 15px;
-        }
-
-        #name-overlay label {
-            color: var(--highlight-color);
-            font-size: 1rem;
-            letter-spacing: 2px;
-        }
-
         #name-input {
-            background: #111;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(197, 160, 89, 0.28);
+            color: var(--text);
             padding: 12px 20px;
             font-family: inherit;
             font-size: 1.1rem;
             text-align: center;
             width: 280px;
-            border-radius: 2px;
+            max-width: 100%;
+            border-radius: 4px;
         }
 
-        #name-input:focus { outline: none; border-color: var(--highlight-color); }
-
-        #combine-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.9);
-            display: none; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 1001; gap: 16px;
-            padding: 24px;
+        #name-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.12);
         }
 
-        #combine-overlay p {
-            color: var(--highlight-color);
-            font-size: 1rem;
-            letter-spacing: 1px;
-            text-align: center;
-            line-height: 1.6;
+        .spinner {
+            width: 38px;
+            height: 38px;
+            border: 2px solid rgba(255,255,255,0.05);
+            border-top: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
         #combine-items {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
         }
 
-        #combine-items button { padding: 0 24px; height: 48px; }
+        #combine-items button { padding: 0 24px; height: 46px; }
 
-        /* ── Desktop layout ── */
+        /* ══ Animations ══ */
+        @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+        @keyframes pulse   { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.5; } }
+        @keyframes spin    { to { transform: rotate(360deg); } }
+
+        /* ══ Desktop ══ */
         @media (min-width: 640px) {
-            :root { --image-height: 240px; }
-
-            .scene-content { padding: 28px 32px 20px; }
-            #feedback-box { padding: 0 32px 24px; }
-
-            #action-panel {
-                padding: 16px 24px;
-                gap: 14px;
+            :root { --image-reveal: 40vh; }
+            #room-name-overlay { font-size: 1.75rem; letter-spacing: 6px; }
+            .scene-content { padding: 22px 32px 18px; }
+            #feedback-box  { padding: 0 32px 22px; }
+            #action-panel  { padding: 12px 28px calc(16px + env(safe-area-inset-bottom, 0px)); }
+            #nav-grid {
+                grid-template-columns: repeat(3, 44px);
+                grid-template-rows: repeat(3, 40px);
             }
-
-            #inventory-list { max-height: 130px; }
+            #nav-grid button { width: 44px; height: 40px; min-height: 40px; }
+            #inventory-list  { max-height: 100px; }
         }
 
         @media (min-width: 900px) {
-            :root { --image-height: 280px; }
+            :root { --image-reveal: 45vh; }
+            #room-name-overlay { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
-    <div id="lang-overlay">
-        <h1>DUNGEON CRAWLER</h1>
-        <button class="lang-btn" onclick="startWithLang('en')">ENGLISH</button>
-        <button class="lang-btn" onclick="startWithLang('nl')">NEDERLANDS</button>
-    </div>
-
-    <div id="name-overlay">
-        <label id="name-label">What is your name?</label>
-        <input type="text" id="name-input" autofocus>
-        <button onclick="submitName()" id="name-btn">START</button>
-    </div>
-
-    <div id="combine-overlay">
-        <p id="combine-prompt"></p>
-        <div id="combine-items"></div>
-        <button onclick="cancelCombine()" style="margin-top:10px;font-size:0.6rem;padding:8px 16px;">CANCEL</button>
-    </div>
-
-    <div id="loading" class="loading-overlay" style="display:none;">
-        <div class="spinner"></div>
-        <p style="margin-top: 25px; letter-spacing: 3px; color: #444; font-size: 0.6rem;">INITIALIZING DUNGEON...</p>
-    </div>
-
+    <!-- Full-screen background image -->
     <div id="scene-visualization">
         <img id="scene-image" alt="Scene">
         <div id="scene-placeholder">VISUALIZING SCENE...</div>
     </div>
 
-    <div id="narrative-container">
-        <div id="scene-text" class="scene-content"></div>
-        <div id="feedback-box">
-            <div id="action-feedback"></div>
-        </div>
+    <!-- Language selection -->
+    <div id="lang-overlay" class="full-overlay">
+        <h1>DUNGEON CRAWLER</h1>
+        <button class="lang-btn" onclick="startWithLang('en')">ENGLISH</button>
+        <button class="lang-btn" onclick="startWithLang('nl')">NEDERLANDS</button>
     </div>
 
+    <!-- Name entry -->
+    <div id="name-overlay" class="full-overlay" style="display:none;">
+        <label id="name-label">What is your name?</label>
+        <input type="text" id="name-input" autofocus>
+        <button onclick="submitName()" id="name-btn">START</button>
+    </div>
+
+    <!-- Combine overlay -->
+    <div id="combine-overlay" class="full-overlay" style="display:none;">
+        <p id="combine-prompt" style="color:var(--gold);text-align:center;line-height:1.7;font-size:0.95rem;letter-spacing:0.5px;max-width:340px;"></p>
+        <div id="combine-items"></div>
+        <button onclick="cancelCombine()" style="margin-top:8px;height:36px;min-height:36px;font-size:0.6rem;padding:0 16px;">CANCEL</button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="full-overlay" style="display:none;">
+        <div class="spinner"></div>
+        <p style="margin-top:22px;letter-spacing:3px;color:#333;font-size:0.58rem;">INITIALIZING DUNGEON...</p>
+    </div>
+
+    <!-- Transparent spacer — lets the image breathe -->
+    <div id="image-spacer">
+        <div id="room-name-overlay"></div>
+    </div>
+
+    <!-- Glass narrative panel -->
+    <div id="narrative-container">
+        <div id="scene-text" class="scene-content"></div>
+    </div>
+
+    <!-- Glass action panel -->
     <div id="action-panel">
         <div id="action-panel-row1">
             <div id="nav-section">
@@ -440,14 +478,16 @@
                 <div id="nav-grid">
                     <button class="btn-north" id="btn-north" disabled>N</button>
                     <button class="btn-west"  id="btn-west"  disabled>W</button>
-                    <button class="btn-south" id="btn-south" disabled>S</button>
+                    <div class="compass-center">✦</div>
                     <button class="btn-east"  id="btn-east"  disabled>E</button>
+                    <button class="btn-south" id="btn-south" disabled>S</button>
                 </div>
             </div>
 
             <div id="interaction-section">
                 <div class="panel-label" id="interaction-label">INTERACTION</div>
                 <div id="dynamic-actions"></div>
+                <div id="action-feedback"></div>
             </div>
         </div>
 
@@ -510,26 +550,23 @@
     function L(key) { return LABELS[LANG][key]; }
 
     // ====== DIRECTION HELPERS ======
-    // Internal directions are always the keys used in connections (EN: north/south/east/west, NL: noord/zuid/oost/west)
-    // For buttons we map to cardinal: north/south/east/west internally
     const CARDINAL = ['north','south','east','west'];
     const CARDINAL_NL = ['noord','zuid','oost','west'];
 
     function dirButtons() {
-        // Returns array of {id, dir_key, label} for the 4 buttons
         if (LANG === 'nl') {
             return [
                 { id: 'btn-north', dir: 'noord', label: 'N' },
-                { id: 'btn-south', dir: 'zuid', label: 'Z' },
-                { id: 'btn-east', dir: 'oost', label: 'O' },
-                { id: 'btn-west', dir: 'west', label: 'W' },
+                { id: 'btn-south', dir: 'zuid',  label: 'Z' },
+                { id: 'btn-east',  dir: 'oost',  label: 'O' },
+                { id: 'btn-west',  dir: 'west',  label: 'W' },
             ];
         }
         return [
             { id: 'btn-north', dir: 'north', label: 'N' },
             { id: 'btn-south', dir: 'south', label: 'S' },
-            { id: 'btn-east', dir: 'east', label: 'E' },
-            { id: 'btn-west', dir: 'west', label: 'W' },
+            { id: 'btn-east',  dir: 'east',  label: 'E' },
+            { id: 'btn-west',  dir: 'west',  label: 'W' },
         ];
     }
 
@@ -543,12 +580,10 @@
         DIRECTION_MAP = STORY.direction_map || {};
         COMMAND_MAP = STORY.command_map || {};
         ITEM_NAME_MAP = STORY.item_name_map || {};
-        // Build reverse map
         ITEM_DISPLAY_MAP = {};
         for (const [display, internal] of Object.entries(ITEM_NAME_MAP)) {
             ITEM_DISPLAY_MAP[internal] = display;
         }
-        // Show name prompt
         document.getElementById('name-label').textContent = STORY.messages.name_prompt;
         document.getElementById('name-overlay').style.display = 'flex';
         document.getElementById('name-input').focus();
@@ -563,7 +598,6 @@
         playerName = name;
         document.getElementById('name-overlay').style.display = 'none';
         document.getElementById('loading').style.display = 'flex';
-        // Try to load saved game
         const saveKey = 'dungeon_' + LANG + '_' + name.toLowerCase();
         const saved = localStorage.getItem(saveKey);
         if (saved) {
@@ -574,7 +608,6 @@
         } else {
             buildWorld();
         }
-        // Setup UI labels
         setupLabels();
         updateScene();
         document.getElementById('loading').style.display = 'none';
@@ -584,11 +617,9 @@
         document.getElementById('nav-label').textContent = L('nav');
         document.getElementById('interaction-label').textContent = L('interact');
         document.getElementById('backpack-label').textContent = L('backpack');
-        // Direction button labels
         const db = dirButtons();
         for (const b of db) {
-            const el = document.getElementById(b.id);
-            el.textContent = b.label;
+            document.getElementById(b.id).textContent = b.label;
         }
     }
 
@@ -620,15 +651,16 @@
         const room = rooms[currentRoom];
         if (!room) return;
 
-        // Scene text
+        // Floating room name over image
+        document.getElementById('room-name-overlay').textContent = room.name;
+
+        // Scene text (description only — name lives in the image spacer)
         let desc = room.unlocked && room.descriptions.unlocked ? room.descriptions.unlocked : room.descriptions.locked;
-        let html = "<span class='room-name'>" + room.name + "</span>";
-        html += "<div class='room-description'>" + (desc || '').split('\n').join('<br>') + "</div>";
+        let html = "<div class='room-description'>" + (desc || '').split('\n').join('<br>') + "</div>";
         if (room.items.length > 0) {
-            html += "<div class='items-found'><span style='color: var(--highlight-color); font-weight: bold;'>" + L('youSee') + "</span>" + room.items.map(i => i.name).join(', ') + "</div>";
+            html += "<div class='items-found'><span style='color: var(--gold); font-weight: bold;'>" + L('youSee') + "</span>" + room.items.map(i => i.name).join(', ') + "</div>";
         }
         document.getElementById('scene-text').innerHTML = html;
-        // Clear feedback when entering new room
         setFeedback('');
         document.getElementById('narrative-container').scrollTop = 0;
 
@@ -656,14 +688,11 @@
             const btn = document.createElement('button');
             btn.textContent = L('take') + ' ' + item.name;
             btn.onclick = () => gameTake(item.name);
-            btn.style.borderColor = 'var(--highlight-color)';
+            btn.style.borderColor = 'rgba(197,160,89,0.3)';
             container.appendChild(btn);
         }
 
-        // Inventory
         updateInventoryUI();
-
-        // Auto-save
         saveGame();
     }
 
@@ -735,7 +764,6 @@
             setFeedback(STORY.messages.cant_go);
             return;
         }
-        // Mark rooms as unlocked when leaving
         if (currentRoom === 'small_town') room.unlocked = true;
         if (currentRoom === 'enchanted_forest') room.unlocked = true;
         if (currentRoom === 'south_east_desert') room.unlocked = true;
@@ -757,8 +785,11 @@
             setFeedback(STORY.messages.item_not_found);
             return;
         }
-        inventory.push(room.items.splice(idx, 1)[0]);
-        setFeedback(L('takMsg')(itemName));
+        const taken = room.items.splice(idx, 1)[0];
+        inventory.push(taken);
+        let takeMsg = L('takMsg')(itemName);
+        if (taken.description) takeMsg += '\n' + taken.description.trim();
+        setFeedback(takeMsg);
         updateScene();
     }
 
@@ -803,7 +834,7 @@
                     inventory = inventory.filter(i => i.name !== itemName);
                     const t = uses.transforms_to;
                     inventory.push({ name: t.name, description: t.description, used: false });
-                    setFeedback(uses.small_town);
+                    setFeedback(uses.small_town + '\n' + t.description.trim());
                     updateScene();
                 } else {
                     setFeedback(uses.default);
@@ -817,7 +848,7 @@
                     room.items = reveals.map(i => ({ name: i.name, description: i.description, used: false }));
                     inventory = inventory.filter(i => i.name !== itemName);
                     let msg = uses.small_town;
-                    msg += room.items.map(i => i.name).join(', ');
+                    msg += room.items.map(i => i.name + (i.description ? ' — ' + i.description.trim() : '')).join('\n');
                     setFeedback(msg);
                     updateScene();
                 } else {
@@ -827,10 +858,10 @@
 
             case 'torch':
                 if (locRef === 'canyon') {
-                    setFeedback(uses.canyon);
                     const t = uses.transforms_to;
                     item.name = t.name;
                     item.description = t.description;
+                    setFeedback(uses.canyon + '\n' + t.description.trim());
                     updateScene();
                 } else {
                     setFeedback(uses.default);
@@ -840,7 +871,6 @@
             case 'lighted-torch':
                 if (locRef === 'entrance_cave') {
                     rooms[currentRoom].unlocked = true;
-                    // Add east/oost connection to cave_tunnel
                     const eastDir = LANG === 'nl' ? 'oost' : 'east';
                     rooms[currentRoom].connections[eastDir] = 'cave_tunnel';
                     setFeedback(uses.entrance_cave);
@@ -869,7 +899,6 @@
             case 'driftwood':
             case 'rope':
                 if (locRef === 'riverland') {
-                    // Show combine prompt
                     const otherInternal = internal === 'driftwood' ? 'rope' : 'driftwood';
                     const otherDisplay = displayName(otherInternal);
                     showCombinePrompt(uses.riverland, itemName, otherInternal, otherDisplay, uses);
@@ -882,10 +911,10 @@
 
             case 'blunt-blades':
                 if (locRef === 'smithy') {
-                    setFeedback(uses.smithy);
                     const t = uses.transforms_to;
                     item.name = t.name;
                     item.description = t.description;
+                    setFeedback(uses.smithy + '\n' + t.description.trim());
                     updateScene();
                 } else {
                     setFeedback(uses.default);
@@ -894,10 +923,10 @@
 
             case 'horse-armor':
                 if (locRef === 'smithy') {
-                    setFeedback(uses.smithy);
                     const t = uses.transforms_to;
                     item.name = t.name;
                     item.description = t.description;
+                    setFeedback(uses.smithy + '\n' + t.description.trim());
                     updateScene();
                 } else {
                     setFeedback(uses.default);
@@ -963,17 +992,14 @@
         const container = document.getElementById('combine-items');
         container.innerHTML = '';
 
-        // Show all inventory items except the source as combine options
         for (const item of inventory) {
             if (item.name === sourceItem) continue;
             const btn = document.createElement('button');
             btn.textContent = item.name;
             btn.onclick = () => {
                 overlay.style.display = 'none';
-                // Check if correct combination
                 const chosenInternal = internalName(item.name);
                 if (chosenInternal === otherInternal && inventory.find(i => i.name === item.name)) {
-                    // Success: build raft
                     const south = LANG === 'nl' ? 'zuid' : 'south';
                     rooms[currentRoom].connections[south] = 'farmland';
                     rooms[currentRoom].unlocked = true;
