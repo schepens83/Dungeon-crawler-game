@@ -58,7 +58,7 @@
       },
       "connections": { "south": "meadow_road", "north": "entrance_cave" },
       "items": [
-        { "name": "drinking-bag", "description": "\nVery large drinking bag made from the skin of a deer. It seems originally to be intended as sacrifice, but in their stupor the elves have used it for their drinking games. The smell of hard liquor still remains inside." }
+        { "name": "empty drinking-bag", "description": "\nVery large drinking bag made from the skin of a deer. It seems originally to be intended as sacrifice, but in their stupor the elves have used it for their drinking games. The smell of hard liquor still remains inside." }
       ]
     },
     "cave_tunnel": {
@@ -91,7 +91,7 @@
     "north_east_desert": {
       "name": "Endless Desert",
       "descriptions": {
-        "locked": "You stand beside your liege's throne as he stands up in the middle of his tirade against one of his vassal-byrons. On occasions such as these he likes to have you around to intimidate people. The throneroom is large and wide. Long tapestries depicting the empires' battles fall down on the sides of the walls. One of them depicts a single rider on his dragon, atacking a whole regiment of some long forgotten kingdom. You're especially fond of that one as it is your grandfather immortalized. A sense of pride fulfills you as you think of the long history of service and loyalty your family has with the empire. As you turn back you see your family as the young ones run around their mothers feet. Their play boisterous but harmless as they scurry along the inner keeps yard. \nWith a snap you startle awake. A small lizard slides away in it's hole. You try to calm your nerves. The desert is nowhere near as empty as it seems during the day. Nowhere near as hot as well. You decide to travel on during the remainder of the night, although you will have to be lucky to find some shade to sleep during the day.",
+        "locked": "You stand beside your liege's throne as he stands up in the middle of his tirade against one of his vassal-byrons. On occasions such as these he likes to have you around to intimidate people. The throneroom is large and wide. Long tapestries depicting the empires' battles fall down on the sides of the walls. One of them depicts a single rider on his dragon, atacking a whole regiment of some long forgotten kingdom. You're especially fond of that one as it is your grandfather immortalized. A sense of pride fulfills you as you think of the long history of service and loyalty your family has with the empire. As you turn back you see your family as the young ones run around their mothers feet. Their play boisterous but harmless as they scurry along the inner keeps yard. \nWith a snap you startle awake. A small lizard slides away in it's hole. You try to calm your nerves. The desert is nowhere near as empty as it seems during the day. Nowhere near as hot as well. You decide to travel on during the remainder of the night. You will have to be lucky to find some shade to sleep during the day.",
         "unlocked": null
       },
       "connections": { "south": "east_desert", "west": "north_desert" },
@@ -218,7 +218,7 @@
     "mountain_pass": {
       "name": "The Eastern Mountain Pass",
       "descriptions": {
-        "locked": "Carefully you crouch beside one of the last trees before the large and open plain of the pass. You see six of them circling directly above you, which probably means they've spotted you. Griphons are not known for their intelligence, but they are pack animals and their instincts for hunting are excellent. Being in the air means they have the advantage of choosing the battleground, which will probably be out in the open where they can come from all sides. You prefer to have the initiative though and even though you feel confident, you decide to wait till darkness sets in. Griphons's nightsight is equal to your own, but the night is dark tonight and they will need to fly low or risk losing you. \n\nYou slowly walk out the forest and look up. The sliver of the moon is invisible behind thick dark clouds. The effect is somewhat diminished by the whiteness of the snow, brightening the night. It will have to do. Non of the beasts nearby as far as you can make out though. Carefully you set out. \n\nWhen you hear the screech hours later, you almost thought you had gotten rid of them. You crouch down and look up towards the sound. Three of them are flying low about 50 meters from your right. They fly parralel to you and are not preparing to attack. That doesn't make sense. Why alert you and give time to ... You get hit sideways by some large weigth. Instinctively you crouch and try to lower your point of gravity but your reaction was late and you find yourself falling sideways. As you do so however, you wip around your tail and are rewarded by solid contact and a pained screech. You manage to grab hold and are pulled up by the griphon trying to get away. The two others that were right behind, suddenly like their situation much less and try to change their collision course. Using the momentum gained by your tail action, you swing your body towards the closest of the two trailing and manage to make a solid connection with one of its wings. Screeching and whimpering...",
+        "locked": "Carefully you crouch beside one of the last trees before the large and open plain of the pass. You see six of them circling directly above you, which probably means they've spotted you. Griphons are not known for their intelligence, but they are pack animals and their instincts for hunting are excellent. Being in the air means they have the advantage of choosing the battleground, which will probably be out in the open where they can come from all sides. You prefer to have the initiative though and even though you feel confident, you decide to wait till darkness sets in. Griphons's nightsight is equal to your own, but the night is dark tonight and they will need to fly low or risk losing you. \n\nYou slowly walk out the forest and look up. The sliver of the moon is invisible behind thick dark clouds. The effect is somewhat diminished by the whiteness of the snow, brightening the night. It will have to do. Non of the beasts nearby as far as you can make out though. Carefully you set out. \n\nWhen you hear the screech hours later, you almost thought you had gotten rid of them. You crouch down and look up towards the sound. Three of them are flying low about 50 meters from your right. They fly parralel to you and are not preparing to attack. That doesn't make sense. Why alert you and give time to ... You get hit sideways by some large weigth. Instinctively you crouch and try to lower your point of gravity but your reaction was late and you find yourself falling sideways. As you do so however, you wip around your tail and are rewarded by solid contact and a pained screech. You manage to grab hold and are pulled up by the griphon trying to get away. The two others that were right behind, suddenly like their situation much less and try to change their collision course. Using the momentum gained by your tail action, you swing your body towards the closest of the two trailing and manage to make a solid connection with one of its wings. Screeching and whimpering, it tries to escape your grip. The rest smartly turn coats as you quickly put it out of its misery. Leaving you to continue your journey home..",
         "unlocked": null
       },
       "connections": { "west": "start_mountain_pass", "east": "home" },
@@ -264,7 +264,7 @@
     "feather": {
       "default": "\nYou scratch yourself beneath your feet with the pointy side and enjoy a momentary relief of an incessant itch."
     },
-    "drinking-bag": {
+    "empty drinking-bag": {
       "small_town": "\nYou fill the drinking-bag with water. Sure to rince it of the liquor by filling and empty-ing it a couple of times.",
       "default": "\nYou look around and wonder what you can do with it. Nothing comes to mind. You put it away again.",
       "transforms_to": {
@@ -355,5 +355,8 @@
     "sack_empty": "\nYour sack is empty.",
     "unknown_command": "\nYou scratch behind your ears and think. \nNo you really don't know how to do that..",
     "possible_actions": "\nPossible actions: \n-directions\n-go <north/south/east/west>\n-take <item>\n-inspect <item>\n-use <item>\n-sack\n-exit"
+  },
+  "item_name_map": {
+    "empty drinking-bag": "drinking-bag"
   }
 }

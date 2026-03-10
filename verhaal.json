@@ -58,7 +58,7 @@
       },
       "connections": { "zuid": "meadow_road", "noord": "entrance_cave" },
       "items": [
-        { "name": "drinkzak", "description": "\nEen zeer grote drinkzak gemaakt van hertenhuid. Het lijkt oorspronkelijk bedoeld als offer, maar in hun roes hebben de elfen het gebruikt voor hun drinkspelen. De geur van sterke drank hangt er nog in." }
+        { "name": "lege drinkzak", "description": "\nEen zeer grote drinkzak gemaakt van hertenhuid. Het lijkt oorspronkelijk bedoeld als offer, maar in hun roes hebben de elfen het gebruikt voor hun drinkspelen. De geur van sterke drank hangt er nog in." }
       ]
     },
     "cave_tunnel": {
@@ -264,7 +264,7 @@
     "veer": {
       "default": "\nJe krabt jezelf onder je voeten met de puntige kant en geniet van een kortstondige verlichting van een aanhoudende jeuk."
     },
-    "drinkzak": {
+    "lege drinkzak": {
       "small_town": "\nJe vult de drinkzak met water. Je spoelt hem eerst een paar keer om de drank eruit te krijgen.",
       "default": "\nJe kijkt rond en vraagt je af wat je ermee kunt doen. Er schiet je niets te binnen. Je bergt het weer op.",
       "transforms_to": {
@@ -376,7 +376,7 @@
     "krokodillentanden": "crocodile-teeth",
     "adelaarsei": "eagle-egg",
     "veer": "feather",
-    "drinkzak": "drinking-bag",
+    "lege drinkzak": "drinking-bag",
     "sleutel": "key",
     "fakkel": "torch",
     "brandende-fakkel": "lighted-torch",
